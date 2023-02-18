@@ -56,11 +56,11 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/form',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    redirect: '/form/table',
+    name: '表单中心',
+    meta: { title: '表单中心', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'table',
