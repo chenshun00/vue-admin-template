@@ -7,12 +7,13 @@
         <el-step @click="activeIndex=1" title="表单配置"></el-step>
         <el-step @click="activeIndex=0" title="流程配置"></el-step>
       </el-steps>
+      <el-button style="margin-top: 12px" @click="next">Next step</el-button>
 
       <div v-show="activeIndex===0">
         <generator/>
       </div>
       <div v-show="activeIndex!==0">
-        none
+        <DesignCenter/>
       </div>
     </el-card>
   </div>
@@ -20,21 +21,23 @@
 
 <script>
 import Generator from '@/views/generator/index.vue'
+import DesignCenter from '@/components/design-center'
 
 export default {
-  components: { Generator },
+  components: { Generator, DesignCenter },
   data() {
     return {
       activeIndex: 0
     }
   },
   created() {
-    this.getCateList()
   },
   methods: {
-    // 获取所有分类数据
-    async getCateList() {
-
+    next: function() {
+      this.activeIndex = this.activeIndex + 1
+      if (this.activeIndex > 1) {
+        this.activeIndex = 0
+      }
     }
   }
 }
