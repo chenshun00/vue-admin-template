@@ -73,22 +73,48 @@ export const constantRoutes = [
         name: 'Tree',
         component: () => import('@/views/tree/index'),
         meta: { title: 'Tree', icon: 'tree' }
+      },
+      {
+        path: 'generator',
+        name: 'Generator',
+        component: () => import('@/views/generator/index'),
+        meta: { title: '工单中心', icon: 'el-icon-table-lamp' }
+      },
+      {
+        path: 'step',
+        name: 'Step',
+        component: () => import('@/views/step/index'),
+        meta: { title: '步骤条', icon: 'el-icon-collection' }
+      }
+    ]
+  },
+  {
+    path: '/parser',
+    name: 'parser',
+    component: Layout,
+    meta: { title: '表单解析', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'parser',
+        name: 'Parser',
+        component: () => import('@/components/parser/example/Index'),
+        meta: { title: '表单解析', icon: 'table' }
       }
     ]
   },
 
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  },
+  // {
+  //   path: '/form',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Form',
+  //       component: () => import('@/views/form/index'),
+  //       meta: { title: 'Form', icon: 'form' }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/nested',
