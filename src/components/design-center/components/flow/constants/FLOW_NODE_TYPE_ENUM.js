@@ -23,5 +23,5 @@ export default {
   NOTIFIER_NODE: 'notifier',
 
   // 结束: End node => type: 'node'
-  END_NODE: 'end',
+  END_NODE: 'end'
 }

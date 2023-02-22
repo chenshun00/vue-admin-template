@@ -19,6 +19,6 @@ export default {
     return {
       text: defaultConfig.content
     }
-  },
+  }
 }
 </script>

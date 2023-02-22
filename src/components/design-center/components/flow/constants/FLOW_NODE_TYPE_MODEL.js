@@ -11,8 +11,8 @@ export default {
     // titleIcon: 'el-icon-user-solid',
     contentIcon: 'el-icon-arrow-right',
     customTitleStyle: {
-      backgroundColor: '#2172C8',
-    },
+      backgroundColor: '#2172C8'
+    }
   },
   [FLOW_NODE_TYPE.APPROVER_NODE]: {
     title: '审批人',
@@ -21,7 +21,7 @@ export default {
     titleIcon: 'el-icon-s-check',
     contentIcon: 'el-icon-arrow-right',
     customTitleStyle: {
-      backgroundColor: '#F49150',
+      backgroundColor: '#F49150'
     },
     errorState: false
   },
@@ -29,7 +29,7 @@ export default {
   [FLOW_NODE_TYPE.CONDITION_BRANCH]: {
     title: '条件分支',
     btnText: '添加条件',
-    titleIcon: 'el-icon-s-grid',
+    titleIcon: 'el-icon-s-grid'
   },
   [FLOW_NODE_TYPE.CONDITION_NODE]: {
     title: '条件节点',
@@ -37,7 +37,7 @@ export default {
     placeholder: '请设置条件',
     customTitleStyle: {
       color: '#67C23A',
-      backgroundColor: 'rgb(255, 255, 255)',
+      backgroundColor: 'rgb(255, 255, 255)'
     },
     errorState: false
   },
@@ -48,7 +48,7 @@ export default {
   [FLOW_NODE_TYPE.PARALLEL_BRANCH]: {
     title: '并行分支',
     btnText: '添加并行分支',
-    titleIcon: 'el-icon-plus',
+    titleIcon: 'el-icon-plus'
   },
   [FLOW_NODE_TYPE.PARALLEL_NODE]: {
     title: '并行分支',
@@ -58,11 +58,11 @@ export default {
     customTitleStyle: {
       color: '#F49150',
       fontSize: '13px',
-      backgroundColor: 'rgb(255, 255, 255)',
-    },
+      backgroundColor: 'rgb(255, 255, 255)'
+    }
   },
   [FLOW_NODE_TYPE.PARALLEL_BRANCH_END]: {
-    title: '并行结束',
+    title: '并行结束'
   },
 
   [FLOW_NODE_TYPE.NOTIFIER_NODE]: {
@@ -72,12 +72,12 @@ export default {
     titleIcon: 'el-icon-message-solid',
     contentIcon: 'el-icon-arrow-right',
     customTitleStyle: {
-      backgroundColor: '#5AAAFF',
+      backgroundColor: '#5AAAFF'
     },
     errorState: false
   },
 
   [FLOW_NODE_TYPE.END_NODE]: {
-    content: '流程结束',
-  },
+    content: '流程结束'
+  }
 }

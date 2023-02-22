@@ -665,6 +665,7 @@ import {
   inputComponents, selectComponents
 } from '@/components/generator/config'
 import { saveFormConf } from '@/utils/db'
+import draggable from 'vuedraggable'
 
 const dateTimeFormat = {
   date: 'yyyy-MM-dd',
@@ -683,7 +684,8 @@ const needRerenderList = ['tinymce']
 export default {
   components: {
     TreeNodeDialog,
-    IconsDialog
+    IconsDialog,
+    draggable
   },
   props: ['showField', 'activeData', 'formConf'],
   data() {

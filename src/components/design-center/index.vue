@@ -39,13 +39,6 @@
         </ul>
       </div>
     </BaseMessageDialog>-->
-
-    <el-button
-      v-if="isDev"
-      style="position: fixed; right: 20px; bottom: 20px;  "
-      @click="handleSave(true)"
-    >TO JSON
-    </el-button>
   </div>
 </template>
 
