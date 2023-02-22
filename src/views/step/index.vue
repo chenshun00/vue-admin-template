@@ -12,15 +12,15 @@
     </el-card>
     <el-tabs :tab-position="tabPosition" v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane name="base" label="基础信息">
-        <generator/>
+        <basic-setting/>
       </el-tab-pane>
       <el-tab-pane name="form" label="表单配置">
-        <DesignCenter/>
+        <generator/>
       </el-tab-pane>
       <el-tab-pane name="process" label="流程配置">
-        Role
+        <DesignCenter/>
       </el-tab-pane>
-      <el-tab-pane name="deploy" label="发布表单">
+      <el-tab-pane name="deploy" label="高级设置">
         deploy
       </el-tab-pane>
     </el-tabs>
@@ -29,11 +29,12 @@
 </template>
 
 <script>
+import BasicSetting from '@/components/BasicSetting/index.vue'
 import Generator from '@/views/generator/index.vue'
 import DesignCenter from '@/components/design-center'
 
 export default {
-  components: { Generator, DesignCenter },
+  components: { BasicSetting, Generator, DesignCenter },
   data() {
     return {
       tabPosition: 'left',

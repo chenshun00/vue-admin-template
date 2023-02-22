@@ -26,6 +26,8 @@
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "serve": "^11.3.2",
+    "stylus": "^0.59.0",
+    "stylus-loader": "^3.0.2",
     "throttle-debounce": "^2.1.0",
     "vue": "2.6.10",
     "vue-mfe": "^1.1.2",
