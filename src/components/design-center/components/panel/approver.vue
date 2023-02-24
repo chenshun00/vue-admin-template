@@ -28,7 +28,7 @@
           ref="org-select"
           v-model="formData.initiator"
           :show="stationVisible"
-          :tab-list="['dep&user']"
+          :tab-list="['u_user']"
           title="发起人"
           buttonType="button"
           @change="emitInitiator"

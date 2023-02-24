@@ -1,6 +1,16 @@
 <template>
   <div class="fc-org-select">
     <div class="tags">
+      <el-button
+        v-if="buttonType === 'button'"
+        size="small"
+        type="primary"
+        icon="el-icon-plus"
+        style="margin-bottom: 6px;"
+        @click="show = true"
+      >
+        添加指定人员
+      </el-button>
       <div class="input-box" :class="{'as-input': buttonType === 'input'}" @click="show = true">
         <el-tag
           v-for="item in selectedData"
@@ -14,8 +24,8 @@
       </div>
 
     </div>
-    <fc-org-transfer
-      ref="transfer"
+    <user
+      ref="user"
       :value="innerValue"
       :title="title"
       :searchable="searchable"
@@ -28,11 +38,11 @@
 </template>
 <script>
 
-import FcOrgTransfer from '@/components/FormControls/OrgTransfer/index.vue'
+import User from '@/components/FormControls/User/index.vue'
 
 export default {
   name: 'FcUserSelect',
-  components: { FcOrgTransfer },
+  components: { User },
   model: {
     prop: 'value',
     event: 'input'
@@ -130,7 +140,7 @@ export default {
     },
 
     getPropByKey(data, tabKey, key) {
-      const transfer = this.$refs['transfer']
+      const transfer = this.$refs['user']
       if (transfer) {
         return transfer.getNodeProp(data, key, tabKey)
       } else {
@@ -147,6 +157,7 @@ export default {
     },
 
     onClose(item) {
+      console.log('onClose')
       const list = this.innerValue[item.tabKey]
       const index = list.findIndex(t => this.getKey(t, item.tabKey) === item.key)
       index > -1 && list.splice(index, 1)
@@ -154,9 +165,11 @@ export default {
       this.$emit('input', this.innerValue)
     },
 
+    // 用于接收user/index.vue传递过来的数据
     onConfirm(data) {
       this.innerValue = data
       this.initSelectedData()
+      // 这里继续传递数据到外不
       this.$emit('input', this.innerValue)
     }
   }

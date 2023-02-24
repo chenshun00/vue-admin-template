@@ -35,6 +35,10 @@ async function loadDepOrUser(node, loadDep = true) {
   return nodeData
 }
 
+async function loadAllUser() {
+  return (await GET_ALL_USER()).data.data
+}
+
 // 获取组织结构根节点
 // 需要自行设置nodeID  重要！！！
 async function getRootDept() {
@@ -52,7 +56,7 @@ function loadDepData(node) {
 }
 
 function loadUserData(node) {
-  return loadDepOrUser(node, false)  // 返回的promise
+  return loadAllUser()
 }
 
 const defaultOption = {
@@ -69,12 +73,7 @@ const defaultOption = {
   },
   // 判断是否为叶子节点 可选值 string | function
   isLeaf: function(data, node) {
-    return data.hasOwnProperty('userId') // 含有empID为人员  且为叶子节点
-  },
-  // 搜索后的结果如果需要展示一些提示文字 例如搜索人员 提示人员所属部门  可以使用该属性
-  // function
-  searchResTip: function(data) {
-    return '部门：' + data.deptId
+    return true // 含有empID为人员  且为叶子节点
   },
   // 判断该节点是否可选 例如同时选择部门和部门下的人
   disabled: function(data, node) {
@@ -85,7 +84,7 @@ const defaultOption = {
   // 搜索节点方法
   onsearch: async function(searchString, resolve, reject) {
     // const param = { page: 1, limit: 200, searchName: searchString }
-    resolve((await GET_ALL_USER()).data)
+    resolve((await GET_PAGE_EMPLOYEE()).data.data)
   }
 }
 
@@ -98,8 +97,8 @@ export const USER_CONFIG = Object.assign({}, defaultOption, {
   disabled: (data, node) => !data.hasOwnProperty('userId')
 })
 const DEP_USER_CONFIG = Object.assign({}, defaultOption, {
-  tabKey: 'dep&user',
-  tabName: '部门和人员',
+  tabKey: 'u_user',
+  tabName: '用户',
   onload: loadUserData,
   disabled: () => false
 })

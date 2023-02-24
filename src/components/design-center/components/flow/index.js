@@ -43,8 +43,6 @@ export default {
       const attributes = {
         attrs: this.$attrs
       }
-      console.log(this.$attrs)
-
       if (this.editable) {
         attributes.on = {
           click: () => {

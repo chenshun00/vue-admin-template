@@ -15,3 +15,5 @@ export const GET_USER_BY_DEPT = data => get(BASE_URL + 'userData.json', data)
 
 // 获取Mock数据
 export const GET_MOCK_CONF = () => get(BASE_URL + 'mockConf.json')
+
+export const GET_ALL_USER = data => get(BASE_URL + 'userData.json', data)
