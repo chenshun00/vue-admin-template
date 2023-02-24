@@ -41,15 +41,12 @@ export default {
       const { type = '', childNode, childrenNodes } = node
       const isBranchNode = node.isBranchNode()
       const attributes = {
-        attrs: this.$attrs,
-        class: {
-          'is-active': this.currNode === node
-        }
+        attrs: this.$attrs
       }
+      console.log(this.$attrs)
 
       if (this.editable) {
         attributes.on = {
-          ...this.$listeners,
           click: () => {
             this.$emit('click-node', node, props)
           }
@@ -64,16 +61,15 @@ export default {
             editable={this.editable}
             index={props.index}
             total={props.total}
-            node={node}
             {...attributes}
             // {...{ model }}
             // {...{ props }}
           />
         ),
         isBranchNode &&
-          childrenNodes &&
-          childrenNodes.length &&
-          this.renderBranchNode(childrenNodes, node, type),
+        childrenNodes &&
+        childrenNodes.length &&
+        this.renderBranchNode(childrenNodes, node, type),
         childNode && this.renderNode(childNode)
       ]
     },
@@ -111,7 +107,7 @@ export default {
     return (
       <div class="flow-layout">
         {this.renderNode(this.rootNode)}
-        <FlowNode type="end" />
+        <FlowNode type="end"/>
       </div>
     )
   }

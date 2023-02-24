@@ -30,7 +30,7 @@ export default {
     participantEmptyRule: NO_AUDIT_TYPES.AUTO_COMPLETE,
     initiatorAutoComplete: true,
     participant: {
-      type: PARTICIPANT_TYPES.POSITION_LABEL,
+      type: PARTICIPANT_TYPES.ASSIGN,
       list: [],
       formFieldKey: '', // for form field
     },
@@ -38,7 +38,7 @@ export default {
   },
   [FLOW_NODE_TYPE.NOTIFIER_NODE]: {
     participant: {
-      type: PARTICIPANT_TYPES.POSITION_LABEL,
+      type: PARTICIPANT_TYPES.ASSIGN,
       list: [],
       formFieldKey: '', // for form field
     },

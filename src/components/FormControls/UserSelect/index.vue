@@ -31,7 +31,7 @@
 import FcOrgTransfer from '@/components/FormControls/OrgTransfer/index.vue'
 
 export default {
-  name: 'FcOrgSelect',
+  name: 'FcUserSelect',
   components: { FcOrgTransfer },
   model: {
     prop: 'value',

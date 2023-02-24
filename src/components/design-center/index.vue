@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.lock="!isReady" class="flow-container">
+  <div class="flow-container">
     <FlowLayout
       :fields="flowFields"
       :root-node="startNode"
@@ -29,16 +29,6 @@
         <span style="color: red">(表单必填字段可作为审批条件)</span>
       </template>
     </ConditionSettings>
-
-    <!-- <BaseMessageDialog title="发布提示" :visible.sync="true">
-      <div>
-        <div><i class="el-icon-warning"></i></div>
-        <h3>当前审批无法发布</h3>
-        <ul v-for="msg in errorMsg" :key="msg.key">
-          <li>{{msg.txt}}</li>
-        </ul>
-      </div>
-    </BaseMessageDialog>-->
   </div>
 </template>
 

@@ -10,7 +10,7 @@ import FlowNodeType from '../constants/FLOW_NODE_TYPE_ENUM'
 import { LOGIC_SIGN_NAME } from '../../../constants/LOGICAL_SIGN'
 import {
   CONDITION_CODE_TYPES,
-  CONDITION_TYPES,
+  CONDITION_TYPES
 } from '../../../constants/ENUM_DEFINITIONS'
 import { deepCopy } from '../../../utils/index'
 

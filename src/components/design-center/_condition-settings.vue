@@ -216,7 +216,8 @@
                 type="primary"
                 plain
                 @click="handleAddCondition(groupIndex, { unionLogic: AND })"
-                >且条件</el-button
+              >且条件
+              </el-button
               >
 
               <el-button
@@ -226,7 +227,8 @@
                 type="primary"
                 plain
                 @click="handleAddCondition(groupIndex, { unionLogic: OR })"
-                >或条件</el-button
+              >或条件
+              </el-button
               >
             </div>
           </div>
@@ -240,7 +242,8 @@
         type="primary"
         plain
         @click="handleAddConditionGroup({ unionLogic: AND })"
-        >且条件组</el-link
+      >且条件组
+      </el-link
       >
 
       <el-link
@@ -249,700 +252,700 @@
         type="primary"
         plain
         @click="handleAddConditionGroup({ unionLogic: OR })"
-        >或条件组</el-link
+      >或条件组
+      </el-link
       >
     </div>
 
-    <SubmitterPicker
-      ref="picker"
-      :show.sync="isSubmitterPickerVisible"
-      multiple
-      :title="computedPickerTitle"
-      :default-selected="computedPickerValue"
-      modal
-      :append-to-body="true"
-      :select-lock="type || 'user'"
-      @onConfirm="handleConfirmPicker"
-    ></SubmitterPicker>
+<!--    <SubmitterPicker-->
+<!--      ref="picker"-->
+<!--      :show.sync="isSubmitterPickerVisible"-->
+<!--      multiple-->
+<!--      :title="computedPickerTitle"-->
+<!--      :default-selected="computedPickerValue"-->
+<!--      modal-->
+<!--      :append-to-body="true"-->
+<!--      :select-lock="type || 'user'"-->
+<!--      @onConfirm="handleConfirmPicker"-->
+<!--    ></SubmitterPicker>-->
 
-    <TabTreePicker
-      :is-show-project="type === 'project'"
-      :is-show-company="type === 'company'"
-      :show.sync="isTabTreePickerVisible"
-      multiple
-      :title="computedPickerTitle"
-      :default-selected="computedPickerValue"
-      modal
-      :append-to-body="true"
-      :exclude-types="[
-        OrgNodeType.Department,
-        OrgNodeType.ConstructUnit,
-        OrgNodeType.ConstructUnitGroup
-      ]"
-      :select-lock="type || 'user'"
-      @onConfirm="handleConfirmPicker"
-    ></TabTreePicker>
+<!--    <TabTreePicker-->
+<!--      :is-show-project="type === 'project'"-->
+<!--      :is-show-company="type === 'company'"-->
+<!--      :show.sync="isTabTreePickerVisible"-->
+<!--      multiple-->
+<!--      :title="computedPickerTitle"-->
+<!--      :default-selected="computedPickerValue"-->
+<!--      modal-->
+<!--      :append-to-body="true"-->
+<!--      :exclude-types="[-->
+<!--        OrgNodeType.Department,-->
+<!--        OrgNodeType.ConstructUnit,-->
+<!--        OrgNodeType.ConstructUnitGroup-->
+<!--      ]"-->
+<!--      :select-lock="type || 'user'"-->
+<!--      @onConfirm="handleConfirmPicker"-->
+<!--    ></TabTreePicker>-->
 
-    <PositionPicker
-      title="选择岗位标签"
-      list-key-name="nodeName"
-      :show.sync="positionVisible"
-      :role-list="computedPositionPickerValue"
-      @addCallBack="handleCallBack"
-    ></PositionPicker>
+    <!--    <PositionPicker-->
+    <!--      title="选择岗位标签"-->
+    <!--      list-key-name="nodeName"-->
+    <!--      :show.sync="positionVisible"-->
+    <!--      :role-list="computedPositionPickerValue"-->
+    <!--      @addCallBack="handleCallBack"-->
+    <!--    ></PositionPicker>-->
 
     <template slot="footer">
       <el-button class="process" type="primary" plain @click="handleClickCancel"
-        >取消</el-button
+      >取消
+      </el-button
       >
       <el-button class="process" type="primary" @click="handleClickConfirm"
-        >确定</el-button
+      >确定
+      </el-button
       >
     </template>
   </el-dialog>
 </template>
 
 <script>
-  import VueMfe from 'vue-mfe'
-  import PropTypes from 'vue-types'
-  import Node from './components/flow/helpers/Node'
-  import { deepCopy } from './utils/index'
-  import { checkBracketPairs } from './utils/checkFlowModel'
-  import { groupToCondition, conditionToGroup } from './utils/conditionAdapters'
-  import {
-    getDefaultNodeType,
-    getConditionLevelByNodeType
-  } from './utils/pickerDataAdapters'
-  import ref from '@/directives/ref'
-  import * as OrgNodeType from '@/enums/orgNodeType'
-  import { AND, LOGIC_SIGN_NAME, OR } from './constants/LOGICAL_SIGN'
-  import {
-    CONDITION_CODE_TYPES,
-    CONDITION_FIELD_TYPES,
-    CONDITION_TYPES,
-    PEOPLE_TYPES,
-    PEOPLE_PICKER_TYPES,
-    PEOPLE_TYPES_KEY_MAP,
-    PEOPLE_TYPES_TITLE,
-    SELECTION_MAP
-  } from './constants/ENUM_DEFINITIONS'
-  import { START_USER_POST_LABEL } from './constants/CONDITION_ADDITION'
+import PropTypes from 'vue-types'
+import Node from './components/flow/helpers/Node'
+import { deepCopy } from './utils/index'
+import { checkBracketPairs } from './utils/checkFlowModel'
+import { conditionToGroup, groupToCondition } from './utils/conditionAdapters'
+import { getConditionLevelByNodeType, getDefaultNodeType } from './utils/pickerDataAdapters'
+import ref from '@/directives/ref'
+import * as OrgNodeType from '@/enums/orgNodeType'
+import { AND, LOGIC_SIGN_NAME, OR } from './constants/LOGICAL_SIGN'
+import {
+  CONDITION_CODE_TYPES,
+  CONDITION_FIELD_TYPES,
+  CONDITION_TYPES,
+  PEOPLE_PICKER_TYPES,
+  PEOPLE_TYPES,
+  PEOPLE_TYPES_KEY_MAP,
+  PEOPLE_TYPES_TITLE,
+  SELECTION_MAP
+} from './constants/ENUM_DEFINITIONS'
+import { START_USER_POST_LABEL } from './constants/CONDITION_ADDITION'
 
-  const defaultConditionItem = {
-    fieldKey: '',
-    conditionType: '',
-    conditionCode: 'string',
-    value: '',
-    key: Node.getUUID(),
-    order: 1,
-    leftBracket: false,
-    rightBracket: false,
-    unionLogic: null
-  }
+const defaultConditionItem = {
+  fieldKey: '',
+  conditionType: '',
+  conditionCode: 'string',
+  value: '',
+  key: Node.getUUID(),
+  order: 1,
+  leftBracket: false,
+  rightBracket: false,
+  unionLogic: null
+}
 
-  export default {
-    name: 'ConditionSettings',
+export default {
+  name: 'ConditionSettings',
 
-    components: {
-      TabTreePicker: () => VueMfe.Lazy('auth2.components.TabTreePicker'),
-      PositionPicker: () => VueMfe.Lazy('auth2.components.PositionPicker'),
-      SubmitterPicker: () => VueMfe.Lazy('auth2.components.SubmitterPicker')
-    },
+  components: {
+    // TabTreePicker: () => VueMfe.Lazy('auth2.components.TabTreePicker'),
+    // PositionPicker: () => VueMfe.Lazy('auth2.components.PositionPicker'),
+    // SubmitterPicker: () => VueMfe.Lazy('auth2.components.SubmitterPicker')
+  },
 
-    directives: { ref },
+  directives: { ref },
 
-    inheritAttrs: false,
+  inheritAttrs: false,
 
-    props: {
-      // visible: PropTypes.bool.def(false),
-      // eslint-disable-next-line
-      node: PropTypes.instanceOf(Node).required,
-      fields: PropTypes.arrayOf(
-        PropTypes.shape({
-          fieldKey: PropTypes.string.isRequired,
-          fieldName: PropTypes.string.isRequired,
-          fieldType: PropTypes.oneOf(Object.values(CONDITION_TYPES)).isRequired,
-          fieldOptions: PropTypes.arrayOf(
-            PropTypes.shape({
-              label: PropTypes.string.isRequired,
-              value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-                .isRequired
-            })
-          )
-        })
-      ),
-      usingConditionFields: PropTypes.object.def({})
-    },
-
-    data() {
-      const nodeConditions = this.getValue('conditions').filter(
-        (condition) =>
-          condition &&
-          condition.value &&
-          condition.conditionCode &&
-          condition.conditionType
-      )
-
-      let conditionsGroup = conditionToGroup(nodeConditions)
-
-      if (!conditionsGroup || !conditionsGroup.length) {
-        // default conditions array: outside group
-        conditionsGroup = [[deepCopy(defaultConditionItem)]]
-      }
-
-      conditionsGroup.forEach((conditions) => {
-        conditions.forEach((t) => {
-          /* generates dynamic and unique UUID key for each node */
-          if (!t.key) t.key = Node.getUUID()
-          return t
-        })
+  props: {
+    // visible: PropTypes.bool.def(false),
+    // eslint-disable-next-line
+    node: PropTypes.instanceOf(Node).required,
+    fields: PropTypes.arrayOf(
+      PropTypes.shape({
+        fieldKey: PropTypes.string.isRequired,
+        fieldName: PropTypes.string.isRequired,
+        fieldType: PropTypes.oneOf(Object.values(CONDITION_TYPES)).isRequired,
+        fieldOptions: PropTypes.arrayOf(
+          PropTypes.shape({
+            label: PropTypes.string.isRequired,
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+              .isRequired
+          })
+        )
       })
+    ),
+    usingConditionFields: PropTypes.object.def({})
+  },
 
-      return {
-        type: null,
-        conditionRef: null,
-        computedPickerVisible: false,
-        positionVisible: false,
-        form: {
-          conditions: conditionsGroup
-        },
-        cloneConditions: deepCopy(nodeConditions)
-      }
+  data() {
+    const nodeConditions = this.getValue('conditions').filter(
+      (condition) =>
+        condition &&
+        condition.value &&
+        condition.conditionCode &&
+        condition.conditionType
+    )
+
+    let conditionsGroup = conditionToGroup(nodeConditions)
+
+    if (!conditionsGroup || !conditionsGroup.length) {
+      // default conditions array: outside group
+      conditionsGroup = [[deepCopy(defaultConditionItem)]]
+    }
+
+    conditionsGroup.forEach((conditions) => {
+      conditions.forEach((t) => {
+        /* generates dynamic and unique UUID key for each node */
+        if (!t.key) t.key = Node.getUUID()
+        return t
+      })
+    })
+
+    return {
+      type: null,
+      conditionRef: null,
+      computedPickerVisible: false,
+      positionVisible: false,
+      form: {
+        conditions: conditionsGroup
+      },
+      cloneConditions: deepCopy(nodeConditions)
+    }
+  },
+
+  computed: {
+    selectOptions() {
+      return this.fields.map(({ fieldKey, fieldName }) => ({
+        label: fieldName || '',
+        value: fieldKey
+      }))
     },
 
-    computed: {
-      selectOptions() {
-        return this.fields.map(({ fieldKey, fieldName }) => ({
-          label: fieldName || '',
-          value: fieldKey
-        }))
-      },
+    originalTypes() {
+      return this.fields.reduce((map, { fieldKey, fieldType } = {}) => {
+        map[fieldKey] = fieldType
+        return map
+      }, {})
+    },
 
-      originalTypes() {
-        return this.fields.reduce((map, { fieldKey, fieldType } = {}) => {
-          map[fieldKey] = fieldType
-          return map
-        }, {})
-      },
+    fieldTypes() {
+      return this.fields.reduce((map, { fieldKey, fieldType } = {}) => {
+        map[fieldKey] = CONDITION_FIELD_TYPES[fieldType]
+        return map
+      }, {})
+    },
 
-      fieldTypes() {
-        return this.fields.reduce((map, { fieldKey, fieldType } = {}) => {
-          map[fieldKey] = CONDITION_FIELD_TYPES[fieldType]
-          return map
-        }, {})
-      },
+    fieldNames() {
+      return this.fields.reduce((map, { fieldKey, fieldName } = {}) => {
+        map[fieldKey] = fieldName
+        return map
+      }, {})
+    },
 
-      fieldNames() {
-        return this.fields.reduce((map, { fieldKey, fieldName } = {}) => {
-          map[fieldKey] = fieldName
-          return map
-        }, {})
-      },
-
-      fieldOptions() {
-        // fix: 单选 RADIO 类型无法显示 SELECT>OPTIONS 组件
-        function isSelectable(type) {
-          return (
-            type === CONDITION_TYPES.COMBO || type === CONDITION_TYPES.RADIO
-          )
-        }
-
-        return this.fields.reduce(
-          (map, { fieldKey, fieldType, fieldOptions: options } = {}) => {
-            if (isSelectable(fieldType) && options && options.length)
-              map[fieldKey] = options
-            return map
-          },
-          {}
+    fieldOptions() {
+      // fix: 单选 RADIO 类型无法显示 SELECT>OPTIONS 组件
+      function isSelectable(type) {
+        return (
+          type === CONDITION_TYPES.COMBO || type === CONDITION_TYPES.RADIO
         )
-      },
+      }
 
-      computedPickerTitle() {
-        return '请选择' + PEOPLE_TYPES_TITLE[this.type]
-      },
+      return this.fields.reduce(
+        (map, { fieldKey, fieldType, fieldOptions: options } = {}) => {
+          if (isSelectable(fieldType) && options && options.length) {
+            map[fieldKey] = options
+          }
+          return map
+        },
+        {}
+      )
+    },
 
-      computedPickerValue() {
-        if (
-          this.conditionRef &&
-          typeof this.conditionRef === 'object' &&
-          Array.isArray(this.conditionRef.value)
-        ) {
-          return this.conditionRef.value.map(({ name, sysNo, nodeType }) => ({
-            sysNo: sysNo,
-            nodeName: name,
-            nodeType,
-            key: this.isSubmitterPicker
-              ? `${sysNo}-${PEOPLE_TYPES_KEY_MAP[this.type || 'user']}`
-              : this.isTabTreePicker
+    computedPickerTitle() {
+      return '请选择' + PEOPLE_TYPES_TITLE[this.type]
+    },
+
+    computedPickerValue() {
+      if (
+        this.conditionRef &&
+        typeof this.conditionRef === 'object' &&
+        Array.isArray(this.conditionRef.value)
+      ) {
+        return this.conditionRef.value.map(({ name, sysNo, nodeType }) => ({
+          sysNo: sysNo,
+          nodeName: name,
+          nodeType,
+          key: this.isSubmitterPicker
+            ? `${sysNo}-${PEOPLE_TYPES_KEY_MAP[this.type || 'user']}`
+            : this.isTabTreePicker
               ? `${this.type}-${sysNo}-${nodeType ||
-                  getDefaultNodeType(this.type)}`
+              getDefaultNodeType(this.type)}`
               : ''
-          }))
-        } else {
-          return []
-        }
-      },
+        }))
+      } else {
+        return []
+      }
+    },
 
-      computedPositionPickerValue() {
+    computedPositionPickerValue() {
+      if (
+        this.conditionRef &&
+        typeof this.conditionRef === 'object' &&
+        Array.isArray(this.conditionRef.value)
+      ) {
+        return this.conditionRef.value.map(({ name, sysNo }) => ({
+          positionName: name,
+          sysNo: sysNo,
+          key: sysNo
+        }))
+      } else {
+        return []
+      }
+    },
+
+    computedConditions() {
+      return groupToCondition(this.form.conditions)
+    },
+
+    isSubmitterPicker() {
+      return (
+        this.type === PEOPLE_TYPES.USER ||
+        this.type === PEOPLE_TYPES.DEPARTMENT ||
+        this.type === PEOPLE_TYPES.DEPARTMENT ||
+        this.type === PEOPLE_TYPES.POSITION_LABEL
+      )
+    },
+
+    isSubmitterPickerVisible: {
+      get() {
+        return this.isSubmitterPicker && this.computedPickerVisible
+      },
+      set(val) {
+        if (!val) {
+          this.type = null
+          this.computedPickerVisible = false
+        }
+
+        return val
+      }
+    },
+
+    isTabTreePicker() {
+      return (
+        this.type === PEOPLE_TYPES.PROJECT ||
+        this.type === PEOPLE_TYPES.COMPANY
+      )
+    },
+
+    isTabTreePickerVisible: {
+      get() {
+        return this.isTabTreePicker && this.computedPickerVisible
+      },
+      set(val) {
+        if (!val) {
+          this.type = null
+          this.computedPickerVisible = false
+        }
+
+        return val
+      }
+    }
+  },
+
+  created() {
+    this.AND = AND
+    this.OR = OR
+    this.LOGIC_SIGNS = LOGIC_SIGN_NAME
+    this.OrgNodeType = OrgNodeType
+  },
+
+  methods: {
+    /**
+     * @description 如果 node 节点的 props 中已存在该值，则取它的值，否则取 defaultSettings 的默认值
+     * @param {string} key key name
+     * @returns {any*}
+     */
+    getValue(key) {
+      if (
+        this.node &&
+        this.node.props &&
+        this.node.props[key] !== undefined
+      ) {
+        return deepCopy(this.node.props[key])
+      } else {
+        return [deepCopy(defaultConditionItem)]
+      }
+    },
+
+    getConditionTypes(condition) {
+      const conditionCode = this.fieldTypes[condition.fieldKey]
+      let conditionTypes = CONDITION_CODE_TYPES[condition.conditionCode]
+
+      if (conditionCode && condition.conditionCode !== conditionCode) {
+        condition.conditionCode = conditionCode
+        conditionTypes = CONDITION_CODE_TYPES[condition.conditionCode]
+
+        // 重置 条件类型
         if (
-          this.conditionRef &&
-          typeof this.conditionRef === 'object' &&
-          Array.isArray(this.conditionRef.value)
+          condition.conditionType &&
+          !conditionTypes[condition.conditionType]
         ) {
-          return this.conditionRef.value.map(({ name, sysNo }) => ({
-            positionName: name,
-            sysNo: sysNo,
-            key: sysNo
-          }))
-        } else {
-          return []
+          condition.conditionType = ''
         }
-      },
 
-      computedConditions() {
-        return groupToCondition(this.form.conditions)
-      },
-
-      isSubmitterPicker() {
-        return (
-          this.type === PEOPLE_TYPES.USER ||
-          this.type === PEOPLE_TYPES.DEPARTMENT ||
-          this.type === PEOPLE_TYPES.DEPARTMENT ||
-          this.type === PEOPLE_TYPES.POSITION_LABEL
-        )
-      },
-
-      isSubmitterPickerVisible: {
-        get() {
-          return this.isSubmitterPicker && this.computedPickerVisible
-        },
-        set(val) {
-          if (!val) {
-            this.type = null
-            this.computedPickerVisible = false
-          }
-
-          return val
+        // 重置 条件value
+        if (condition.value) {
+          condition.value = ''
         }
-      },
+      }
 
-      isTabTreePicker() {
-        return (
-          this.type === PEOPLE_TYPES.PROJECT ||
-          this.type === PEOPLE_TYPES.COMPANY
+      return conditionTypes
+    },
+
+    getPickerType(condition) {
+      return condition.fieldKey
+        ? PEOPLE_PICKER_TYPES[this.originalTypes[condition.fieldKey]]
+        : ''
+    },
+
+    isPosition(condition) {
+      if (condition) {
+        return condition.fieldKey === START_USER_POST_LABEL
+      }
+      return false
+    },
+
+    isMultipleType(condition) {
+      return (
+        condition &&
+        condition.conditionType &&
+        (condition.conditionType === SELECTION_MAP.EQUAL_ANY_ONE ||
+          condition.conditionType === SELECTION_MAP.NE_ANY_ONE)
+      )
+    },
+
+    handleConditionPickerRef(condition, ref) {
+      if (!this.conditionValPickerRefMap) {
+        this.conditionValPickerRefMap = new WeakMap()
+      }
+
+      if (ref) {
+        if (
+          !this.conditionValPickerRefMap.has(condition) ||
+          this.conditionValPickerRefMap.get(condition) !== ref
+        ) {
+          this.conditionValPickerRefMap.set(condition, ref)
+        }
+      } else {
+        this.conditionValPickerRefMap.delete(condition)
+      }
+    },
+
+    handleConditionTypeChange(condition, value) {
+      if (
+        !this.isMultipleType({ conditionType: value }) &&
+        Array.isArray(condition.value) &&
+        condition.value.length > 1
+      ) {
+        condition.value = condition.value.slice(0, 1)
+      }
+
+      if (
+        this.conditionValPickerRefMap &&
+        this.conditionValPickerRefMap.has(condition)
+      ) {
+        const conditionValPickerRef = this.conditionValPickerRefMap.get(
+          condition
         )
-      },
 
-      isTabTreePickerVisible: {
-        get() {
-          return this.isTabTreePicker && this.computedPickerVisible
-        },
-        set(val) {
-          if (!val) {
-            this.type = null
-            this.computedPickerVisible = false
-          }
-
-          return val
+        if (conditionValPickerRef) {
+          conditionValPickerRef.resetInputHeight()
         }
       }
     },
 
-    created() {
-      this.AND = AND
-      this.OR = OR
-      this.LOGIC_SIGNS = LOGIC_SIGN_NAME
-      this.OrgNodeType = OrgNodeType
+    handleConitionValueChange(condition, value) {
+      if (Array.isArray(value)) {
+        condition.value = value
+      } else {
+        condition.value = [value]
+      }
     },
 
-    methods: {
-      /**
-       * @description 如果 node 节点的 props 中已存在该值，则取它的值，否则取 defaultSettings 的默认值
-       * @param {string} key key name
-       * @returns {any*}
-       */
-      getValue(key) {
-        if (
-          this.node &&
-          this.node.props &&
-          this.node.props[key] !== undefined
-        ) {
-          return deepCopy(this.node.props[key])
-        } else {
-          return [deepCopy(defaultConditionItem)]
-        }
-      },
-
-      getConditionTypes(condition) {
-        const conditionCode = this.fieldTypes[condition.fieldKey]
-        let conditionTypes = CONDITION_CODE_TYPES[condition.conditionCode]
-
-        if (conditionCode && condition.conditionCode !== conditionCode) {
-          condition.conditionCode = conditionCode
-          conditionTypes = CONDITION_CODE_TYPES[condition.conditionCode]
-
-          // 重置 条件类型
-          if (
-            condition.conditionType &&
-            !conditionTypes[condition.conditionType]
-          ) {
-            condition.conditionType = ''
-          }
-
-          // 重置 条件value
-          if (condition.value) {
-            condition.value = ''
-          }
-        }
-
-        return conditionTypes
-      },
-
-      getPickerType(condition) {
-        return condition.fieldKey
-          ? PEOPLE_PICKER_TYPES[this.originalTypes[condition.fieldKey]]
-          : ''
-      },
-
-      isPosition(condition) {
-        if (condition) {
-          return condition.fieldKey === START_USER_POST_LABEL
-        }
-        return false
-      },
-
-      isMultipleType(condition) {
-        return (
-          condition &&
-          condition.conditionType &&
-          (condition.conditionType === SELECTION_MAP.EQUAL_ANY_ONE ||
-            condition.conditionType === SELECTION_MAP.NE_ANY_ONE)
-        )
-      },
-
-      handleConditionPickerRef(condition, ref) {
-        if (!this.conditionValPickerRefMap) {
-          this.conditionValPickerRefMap = new WeakMap()
-        }
-
-        if (ref) {
-          if (
-            !this.conditionValPickerRefMap.has(condition) ||
-            this.conditionValPickerRefMap.get(condition) !== ref
-          ) {
-            this.conditionValPickerRefMap.set(condition, ref)
-          }
-        } else {
-          this.conditionValPickerRefMap.delete(condition)
-        }
-      },
-
-      handleConditionTypeChange(condition, value) {
-        if (
-          !this.isMultipleType({ conditionType: value }) &&
-          Array.isArray(condition.value) &&
-          condition.value.length > 1
-        ) {
-          condition.value = condition.value.slice(0, 1)
-        }
-
-        if (
-          this.conditionValPickerRefMap &&
-          this.conditionValPickerRefMap.has(condition)
-        ) {
-          const conditionValPickerRef = this.conditionValPickerRefMap.get(
-            condition
+    getFieldOptions(condition) {
+      if (this.getPickerType(condition) || this.isPosition(condition)) {
+        return (condition.value || [])
+          .map(
+            ({ name, parentFullName }) =>
+              `${name}${parentFullName ? '(' + parentFullName + ')' : ''}`
           )
+          .join('、')
+      } else {
+        return this.fieldOptions[condition.fieldKey]
+      }
+    },
 
-          if (conditionValPickerRef) {
-            conditionValPickerRef.resetInputHeight()
+    /* update node model */
+    handleUpdate(opts) {
+      this.node && this.node.update(opts)
+    },
+
+    /* update node props */
+    handleUpdateProps(optsOrkey) {
+      this.node &&
+      this.node.updateProps(
+        typeof optsOrkey !== 'string'
+          ? optsOrkey
+          : {
+            [optsOrkey]: this[optsOrkey]
           }
-        }
-      },
+      )
+    },
 
-      handleConitionValueChange(condition, value) {
-        if (Array.isArray(value)) {
-          condition.value = value
-        } else {
-          condition.value = [value]
-        }
-      },
+    handleAddCondition(groupIndex, opts = {}) {
+      this.form.conditions[groupIndex].push({
+        ...defaultConditionItem,
+        ...opts,
+        key: Node.getUUID()
+      })
+    },
 
-      getFieldOptions(condition) {
-        if (this.getPickerType(condition) || this.isPosition(condition)) {
-          return (condition.value || [])
-            .map(
-              ({ name, parentFullName }) =>
-                `${name}${parentFullName ? '(' + parentFullName + ')' : ''}`
-            )
-            .join('、')
-        } else {
-          return this.fieldOptions[condition.fieldKey]
-        }
-      },
-
-      /* update node model */
-      handleUpdate(opts) {
-        this.node && this.node.update(opts)
-      },
-
-      /* update node props */
-      handleUpdateProps(optsOrkey) {
-        this.node &&
-          this.node.updateProps(
-            typeof optsOrkey !== 'string'
-              ? optsOrkey
-              : {
-                  [optsOrkey]: this[optsOrkey]
-                }
-          )
-      },
-
-      handleAddCondition(groupIndex, opts = {}) {
-        this.form.conditions[groupIndex].push({
+    handleAddConditionGroup(opts) {
+      this.form.conditions.push([
+        {
           ...defaultConditionItem,
           ...opts,
           key: Node.getUUID()
-        })
-      },
-
-      handleAddConditionGroup(opts) {
-        this.form.conditions.push([
-          {
-            ...defaultConditionItem,
-            ...opts,
-            key: Node.getUUID()
-          }
-        ])
-      },
-
-      handleRemoveCondition(groupIndex, index) {
-        const group = this.form.conditions[groupIndex]
-        group.splice(index, 1)
-
-        if (!group.length) {
-          this.handleRemoveConditionGroup(groupIndex)
         }
+      ])
+    },
 
-        this.checkConditionSymbol()
-      },
+    handleRemoveCondition(groupIndex, index) {
+      const group = this.form.conditions[groupIndex]
+      group.splice(index, 1)
 
-      handleRemoveConditionGroup(index) {
-        this.form.conditions.splice(index, 1)
-        this.checkConditionSymbol()
-      },
-
-      checkConditionSymbol() {
-        const group1st = this.form.conditions[0]
-        const condition1st = group1st && group1st[0]
-
-        // 检查首个条件组的首个条件是否存在 logic symbol
-        if (condition1st.unionLogic !== null) {
-          condition1st.unionLogic = null
-        }
-      },
-
-      getGroupLogicSymbol(groupIndex) {
-        const conditions = (this.form.conditions || [])[groupIndex] || []
-        const firstCondition = conditions[0]
-
-        if (firstCondition && firstCondition.unionLogic) {
-          return firstCondition.unionLogic
-        }
-
-        return null
-      },
-
-      handleClickConfirm() {
-        const conditions = this.computedConditions
-
-        this.submitForm(() => {
-          try {
-            checkBracketPairs(conditions)
-            this.handleUpdateProps({
-              conditions: conditions.filter(
-                ({ conditionCode, conditionType, fieldKey, value }) =>
-                  conditionCode && conditionType && fieldKey && value
-              )
-            })
-            this.node && this.node.read({ conditions, fields: this.fields })
-            this.calcUsingConditionNumber()
-
-            this.$emit('update:visible', false)
-          } catch (e) {
-            this.$message.warning(e.message)
-            console.error(e)
-          }
-        })
-      },
-
-      calcUsingConditionNumber() {
-        const oldConditionFields = this.cloneConditions.map((i) => i.fieldKey)
-        const newConditionFields = this.computedConditions.map(
-          (i) => i.fieldKey
-        )
-
-        oldConditionFields.forEach((i) => {
-          this.usingConditionFields[i]--
-        })
-
-        newConditionFields.forEach((i) => {
-          if (Reflect.has(this.usingConditionFields, i)) {
-            this.usingConditionFields[i]++
-          } else {
-            this.$set(this.usingConditionFields, i, 1)
-          }
-        })
-
-        Object.keys(this.usingConditionFields).forEach((i) => {
-          if (this.usingConditionFields[i] === 0) {
-            Reflect.deleteProperty(this.usingConditionFields, i)
-          }
-        })
-      },
-
-      handleClickCancel() {
-        // this.resetForm()
-        this.$emit('update:visible', false)
-      },
-
-      handleClickPickerInput(condition) {
-        this.conditionRef = condition
-
-        if (condition.fieldKey === START_USER_POST_LABEL) {
-          this.positionVisible = true
-        } else {
-          this.type = this.getPickerType(condition)
-          this.computedPickerVisible = true
-        }
-      },
-
-      handleConfirmPicker(values) {
-        if (this.conditionRef) {
-          this.conditionRef.value = values.map(
-            ({ sysNo, nodeName: name, nodeType }) => ({
-              name,
-              sysNo,
-              nodeType,
-              level: getConditionLevelByNodeType(nodeType)
-            })
-          )
-        }
-      },
-
-      handleCallBack(values) {
-        if (this.conditionRef) {
-          this.conditionRef.value = values.map((i) => ({
-            name: `${i.positionName}${
-              i.parentFullName ? '(' + i.parentFullName + ')' : ''
-            }`,
-            sysNo: i.sysNo
-          }))
-        }
-      },
-
-      submitForm(resolve, reject) {
-        this.$refs['conditionsForm'].validate((valid) => {
-          if (valid) {
-            resolve && resolve()
-          } else {
-            reject && reject()
-            return false
-          }
-        })
-      },
-
-      resetForm() {
-        this.$refs['conditionsForm'].resetFields()
-      },
-
-      handleChange(condition) {
-        condition.value = ''
+      if (!group.length) {
+        this.handleRemoveConditionGroup(groupIndex)
       }
+
+      this.checkConditionSymbol()
+    },
+
+    handleRemoveConditionGroup(index) {
+      this.form.conditions.splice(index, 1)
+      this.checkConditionSymbol()
+    },
+
+    checkConditionSymbol() {
+      const group1st = this.form.conditions[0]
+      const condition1st = group1st && group1st[0]
+
+      // 检查首个条件组的首个条件是否存在 logic symbol
+      if (condition1st.unionLogic !== null) {
+        condition1st.unionLogic = null
+      }
+    },
+
+    getGroupLogicSymbol(groupIndex) {
+      const conditions = (this.form.conditions || [])[groupIndex] || []
+      const firstCondition = conditions[0]
+
+      if (firstCondition && firstCondition.unionLogic) {
+        return firstCondition.unionLogic
+      }
+
+      return null
+    },
+
+    handleClickConfirm() {
+      const conditions = this.computedConditions
+
+      this.submitForm(() => {
+        try {
+          checkBracketPairs(conditions)
+          this.handleUpdateProps({
+            conditions: conditions.filter(
+              ({ conditionCode, conditionType, fieldKey, value }) =>
+                conditionCode && conditionType && fieldKey && value
+            )
+          })
+          this.node && this.node.read({ conditions, fields: this.fields })
+          this.calcUsingConditionNumber()
+
+          this.$emit('update:visible', false)
+        } catch (e) {
+          this.$message.warning(e.message)
+          console.error(e)
+        }
+      })
+    },
+
+    calcUsingConditionNumber() {
+      const oldConditionFields = this.cloneConditions.map((i) => i.fieldKey)
+      const newConditionFields = this.computedConditions.map(
+        (i) => i.fieldKey
+      )
+
+      oldConditionFields.forEach((i) => {
+        this.usingConditionFields[i]--
+      })
+
+      newConditionFields.forEach((i) => {
+        if (Reflect.has(this.usingConditionFields, i)) {
+          this.usingConditionFields[i]++
+        } else {
+          this.$set(this.usingConditionFields, i, 1)
+        }
+      })
+
+      Object.keys(this.usingConditionFields).forEach((i) => {
+        if (this.usingConditionFields[i] === 0) {
+          Reflect.deleteProperty(this.usingConditionFields, i)
+        }
+      })
+    },
+
+    handleClickCancel() {
+      // this.resetForm()
+      this.$emit('update:visible', false)
+    },
+
+    handleClickPickerInput(condition) {
+      this.conditionRef = condition
+
+      if (condition.fieldKey === START_USER_POST_LABEL) {
+        this.positionVisible = true
+      } else {
+        this.type = this.getPickerType(condition)
+        this.computedPickerVisible = true
+      }
+    },
+
+    handleConfirmPicker(values) {
+      if (this.conditionRef) {
+        this.conditionRef.value = values.map(
+          ({ sysNo, nodeName: name, nodeType }) => ({
+            name,
+            sysNo,
+            nodeType,
+            level: getConditionLevelByNodeType(nodeType)
+          })
+        )
+      }
+    },
+
+    handleCallBack(values) {
+      if (this.conditionRef) {
+        this.conditionRef.value = values.map((i) => ({
+          name: `${i.positionName}${
+            i.parentFullName ? '(' + i.parentFullName + ')' : ''
+          }`,
+          sysNo: i.sysNo
+        }))
+      }
+    },
+
+    submitForm(resolve, reject) {
+      this.$refs['conditionsForm'].validate((valid) => {
+        if (valid) {
+          resolve && resolve()
+        } else {
+          reject && reject()
+          return false
+        }
+      })
+    },
+
+    resetForm() {
+      this.$refs['conditionsForm'].resetFields()
+    },
+
+    handleChange(condition) {
+      condition.value = ''
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .flow-condition {
-    ::v-deep .el-form-item--mini {
-      margin-bottom: 0;
-      height: 30px;
-    }
+.flow-condition {
+  ::v-deep .el-form-item--mini {
+    margin-bottom: 0;
+    height: 30px;
+  }
 
-    ::v-deep .el-form-item__content {
-      height: 30px;
-      line-height: 30px;
-    }
+  ::v-deep .el-form-item__content {
+    height: 30px;
+    line-height: 30px;
+  }
 
-    & + & {
-      margin-top: 20px;
-    }
+  & + & {
+    margin-top: 20px;
+  }
 
-    &-group {
-      border: 1px dashed rgba(187, 187, 187, 1);
-      border-top: 0;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
+  &-group {
+    border: 1px dashed rgba(187, 187, 187, 1);
+    border-top: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 
-      &__title {
-        display: flex;
+    &__title {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      min-height: 50px;
+      padding: 10px 0 10px 15px;
+      color: #101010;
+      background-color: #f4f6f8;
+
+      &-text {
         flex: 1;
-        align-items: center;
-        min-height: 50px;
-        padding: 10px 0 10px 15px;
-        color: #101010;
-        background-color: #f4f6f8;
+      }
 
-        &-text {
-          flex: 1;
-        }
+      &-del {
+        ::v-deep .el-button {
+          color: rgba(128, 128, 128, 1);
 
-        &-del {
-          ::v-deep .el-button {
-            color: rgba(128, 128, 128, 1);
-
-            &:hover {
-              color: #2185f8;
-            }
+          &:hover {
+            color: #2185f8;
           }
         }
       }
-
-      &__content {
-        padding: 15px;
-      }
-
-      &__logic {
-        margin: 10px 0;
-      }
     }
 
-    & + &-action {
-      margin-top: 20px;
+    &__content {
+      padding: 15px;
     }
 
-    &-item {
-      margin-bottom: 15px;
-
-      &__logic {
-        margin-bottom: 10px;
-      }
+    &__logic {
+      margin: 10px 0;
     }
+  }
 
-    &-remove {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  & + &-action {
+    margin-top: 20px;
+  }
 
-      .el-button {
-        color: #f16e6e;
-        font-size: 14px;
+  &-item {
+    margin-bottom: 15px;
 
-        &:hover {
-          color: darken($color: #f16e6e, $amount: 10);
-        }
+    &__logic {
+      margin-bottom: 10px;
+    }
+  }
+
+  &-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .el-button {
+      color: #f16e6e;
+      font-size: 14px;
+
+      &:hover {
+        color: darken($color: #f16e6e, $amount: 10);
       }
     }
   }
+}
 </style>
