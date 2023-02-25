@@ -176,7 +176,6 @@ export default {
     }
   },
   data() {
-
     return {
       searchRes: [],  // 搜索后的结果
       selectedData: [],   // 用户手动选择的节点(在tree里面已经显示的节点)

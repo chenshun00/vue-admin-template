@@ -74,7 +74,7 @@ export default {
     handleRemoveNode() {
       const node = this.node && this.node.remove(this, this.index)
       this.$emit('update-node', node.getRootNode(node))
-    },
-  },
+    }
+  }
 }
 </script>

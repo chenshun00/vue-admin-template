@@ -1,5 +1,6 @@
 <template>
   <div class="flow-panel-block">
+    hello world!
     <div v-if="title || $slots.title" class="flow-panel-hd">
       <slot v-if="$slots.title" name="title"></slot>
       <h4 v-else>{{title}}</h4>

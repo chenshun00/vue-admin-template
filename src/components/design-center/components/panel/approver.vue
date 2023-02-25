@@ -26,7 +26,7 @@
       <div v-if="this.participant.type==='assign'" class="flow-panel-button">
         <fc-user-select
           ref="org-select"
-          v-model="formData.initiator"
+          v-model="participant.list"
           :show="stationVisible"
           :tab-list="['u_user']"
           title="发起人"
@@ -108,16 +108,8 @@ export default {
      * http://shzhangji.com/blog/2018/04/17/form-handling-in-vuex-strict-mode/
      * 在反显的状态下数据来自 Vuex 不能直接更新，所以干脆就 deepCopy 一份数据
      */
-    const participant = this.getValue('participant')
     const canRollback = this.getValue('canRollback')
     return {
-      formData: {
-        flowName: '',
-        flowImg: '',
-        flowGroup: undefined,
-        flowRemark: undefined,
-        initiator: null
-      },
       optionalTypes: OPTIONAL_TYPE_ENUM,
       optionalScope: OPTIONAL_SCOPE_ENUM,
       /* 参与人类型 */
@@ -132,9 +124,7 @@ export default {
       approveOrderEnum: APPROVE_ORDER_ENUM,
 
       /* node props model */
-      participant: {
-        ...participant
-      },
+      participant: this.getValue('participant'),
       stationVisible: false,
       opinionSetting: this.getValue('opinionSetting'),
       taskRule: this.getValue('taskRule'),
@@ -394,10 +384,12 @@ export default {
       // eslint-disable-next-line no-undef
       const temp = data.u_user.map(x => x.userName).join()
       console.log(temp)
-      this.participant.list = data.u_user
       this.node &&
       this.node.update({
         'content': temp
+      })
+      this.node.updateProps({
+        'list': data.u_user
       })
     },
     /**
@@ -447,8 +439,6 @@ export default {
     },
     /* update node props */
     handleUpdateProps(key) {
-      console.log('key', key)
-      console.log('key', this[key])
       this.node &&
       this.node.updateProps({
         [key]: this[key]
@@ -505,6 +495,7 @@ export default {
       }
     },
     handleCallBack(values) {
+      console.log('handleCallBack')
       this.participant.list = values.map((i) => ({
         ...i,
         name: i.positionName,
@@ -512,6 +503,7 @@ export default {
         organizationType: i.organizationType,
         value: i.sysNo,
         hasUser: undefined,
+        userName: i.userName,
         model: {
           positionLabelSysNo: i.sysNo,
           positionLabelName: i.positionName,

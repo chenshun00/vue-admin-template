@@ -11,6 +11,7 @@
       >
         添加指定人员
       </el-button>
+      {{selectedData}}
       <div class="input-box" :class="{'as-input': buttonType === 'input'}" @click="show = true">
         <el-tag
           v-for="item in selectedData"
