@@ -19,7 +19,7 @@ export default {
   name: 'SponsorPanel',
   type: FLOW_NODE_TYPE_ENUM.SPONSOR_NODE,
   components: {
-    PanelBlock,
+    PanelBlock
   },
   props: {
     // eslint-disable-next-line
@@ -28,9 +28,9 @@ export default {
   methods: {
     handleChange(val) {
       this.node.update({
-        title: val,
+        title: val
       })
-    },
-  },
+    }
+  }
 }
 </script>

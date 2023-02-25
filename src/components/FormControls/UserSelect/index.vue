@@ -157,7 +157,6 @@ export default {
     },
 
     onClose(item) {
-      console.log('onClose')
       const list = this.innerValue[item.tabKey]
       const index = list.findIndex(t => this.getKey(t, item.tabKey) === item.key)
       index > -1 && list.splice(index, 1)
@@ -168,6 +167,7 @@ export default {
     // 用于接收user/index.vue传递过来的数据
     onConfirm(data) {
       this.innerValue = data
+      // 传递过来的数据
       this.initSelectedData()
       // 这里继续传递数据到外不
       this.$emit('input', this.innerValue)

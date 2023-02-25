@@ -11,7 +11,7 @@ export default {
   name: 'ApproverNode',
   type: TYPE,
   components: {
-    BaseNode,
+    BaseNode
   },
   inheritAttrs: false,
   props: {
@@ -23,11 +23,11 @@ export default {
       props: {
         ...defaultConfig,
         ...this.node.model,
-        node: this.node,
+        node: this.node
       },
       attrs: this.$attrs,
-      on: this.$listeners,
+      on: this.$listeners
     })
-  },
+  }
 }
 </script>

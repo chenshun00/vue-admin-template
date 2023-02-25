@@ -23,7 +23,7 @@
       </el-select>
 
       <!-- 是否展现 <添加指定人员的button> -->
-      <div v-if="showAddBtn" class="flow-panel-button">
+      <div v-if="this.participant.type==='assign'" class="flow-panel-button">
         <fc-user-select
           ref="org-select"
           v-model="formData.initiator"
@@ -31,195 +31,8 @@
           :tab-list="['u_user']"
           title="发起人"
           buttonType="button"
-          @change="emitInitiator"
+          @input="input"
         />
-        <el-button
-          v-if="showClearBtn"
-          size="mini"
-          type="text"
-          @click="handleClearTags"
-        >清空
-        </el-button>
-      </div>
-
-      <template v-if="showSelect">
-        <div v-if="selectOptions.length" class="flow-panel-button">
-          <el-select v-model="participant.formFieldKey" size="mini">
-            <el-option
-              v-for="{ label, value } in selectOptions"
-              :key="value"
-              :label="label"
-              :value="value"
-            />
-          </el-select>
-        </div>
-        <div v-else class="flow-panel-button">暂无数据</div>
-      </template>
-      <div
-        v-if="showAddBtn && participant.list && participant.list.length"
-        class="participant"
-      >
-        <Draggable
-          v-model="participant.list"
-          :disabled="!isDraggable"
-          ghost-class="wf-approver-ghost-item"
-        >
-          <template v-for="tag in participant.list">
-            <el-popover
-              v-if="tag.hasUser === false"
-              :key="tag.key"
-              popper-class="flow-panel-popover"
-              trigger="hover"
-              :visible-arrow="false"
-              :content="`该${participantTypes[participant.type]}中无用户存在`"
-              placement="top"
-            >
-              <span
-                slot="reference"
-                class="participant-item"
-                :class="isDraggable ? 'draggable' : ''"
-              >
-                <i v-if="isDraggable" class="el-icon-rank"/>
-                <el-tag
-                  :key="tag.value"
-                  type="danger"
-                  size="mini"
-                  disable-transitions
-                  closable
-                  @close="handleDeleteTag(participant.list, tag)"
-                >
-                  <span>{{ tag.name }} {{ tag.parentFullName || '' }}</span>
-                  <i class="el-icon-warning"/>
-                </el-tag>
-              </span>
-            </el-popover>
-
-            <span
-              v-else
-              :key="tag.key"
-              class="participant-item"
-              :class="isDraggable ? 'draggable' : ''"
-            >
-              <i v-if="isDraggable" class="el-icon-rank"/>
-              <el-tag
-                :key="tag.value"
-                size="mini"
-                disable-transitions
-                closable
-                @close="handleDeleteTag(participant.list, tag)"
-              >
-                <span>{{ tag.name }} {{ tag.parentFullName || '' }}</span>
-              </el-tag>
-            </span>
-          </template>
-        </Draggable>
-
-        <el-button
-          v-if="!showAddBtn && showClearBtn"
-          size="mini"
-          type="text"
-          @click="handleClearTags"
-        >清空
-        </el-button>
-      </div>
-    </PanelBlock>
-
-    <template
-      v-if="
-        !isOptionalPersonal ||
-          (isOptionalPersonal && participant.optionalType === 'multiple')
-      "
-    >
-      <el-divider/>
-
-      <PanelBlock title="多人审批时采用方式">
-        <div class="flow-panel-radios">
-          <el-radio-group v-model="taskRule">
-            <el-radio
-              v-for="(val, key) in taskRuleTypes"
-              :key="key"
-              :label="key"
-            >{{ val }}
-            </el-radio>
-          </el-radio-group>
-        </div>
-      </PanelBlock>
-    </template>
-
-    <el-divider/>
-
-    <PanelBlock title="自动通过设置">
-      <div class="flow-panel-radios">
-        <el-checkbox v-model="initiatorAutoComplete">
-          审批人 = 发起人时，自动通过
-          <el-tooltip
-            content="取消勾选，则审批人=发起人时，依然需要审批"
-            placement="top"
-          >
-            <i class="el-icon-info"/>
-          </el-tooltip>
-        </el-checkbox>
-        <el-checkbox v-model="participantEmptyRule">
-          审批人为空时，自动通过
-          <el-tooltip
-            content="取消勾选，则审批人为空时，不允许提交"
-            placement="top"
-          >
-            <i class="el-icon-info"/>
-          </el-tooltip>
-        </el-checkbox>
-      </div>
-    </PanelBlock>
-
-    <PanelBlock>
-      <h4 slot="title">
-        <span>审批意见</span>
-        <i v-if="false" class="el-icon-question"/>
-      </h4>
-
-      <div class="flow-panel-checkbox">
-        <el-checkbox v-model="opinionSetting.textOpinionEnabled">{{
-            opinionSetting.textOpinionName
-          }}
-        </el-checkbox>
-        <el-collapse-transition>
-          <div
-            v-if="opinionSetting.textOpinionEnabled"
-            class="flow-panel-checkbox-gap"
-          >
-            <el-checkbox
-              v-model="opinionSetting.textOpinionRequired"
-            >必填
-            </el-checkbox>
-          </div>
-        </el-collapse-transition>
-        <p
-          style="
-            color: black;
-            font-size: 14px;
-            font-weight: normal;
-            margin: 10px 0;
-          "
-        >
-          审批意见提示文字
-        </p>
-        <el-input
-          v-model="opinionSetting.textOpinionTip"
-          size="mini"
-        />
-      </div>
-    </PanelBlock>
-
-    <el-divider/>
-
-    <PanelBlock>
-      <h4 slot="title">
-        <span>其他操作</span>
-        <i v-if="false" class="el-icon-question"/>
-      </h4>
-
-      <div class="flow-panel-checkbox">
-        <el-checkbox v-model="canTransfer">允许转交</el-checkbox>
       </div>
     </PanelBlock>
   </div>
@@ -296,9 +109,7 @@ export default {
      * 在反显的状态下数据来自 Vuex 不能直接更新，所以干脆就 deepCopy 一份数据
      */
     const participant = this.getValue('participant')
-    console.log(participant)
     const canRollback = this.getValue('canRollback')
-    console.log(participant.type)
     return {
       formData: {
         flowName: '',
@@ -427,7 +238,6 @@ export default {
   watch: {
     'participant.type'() {
       this.participant.list = []
-      console.log('------')
       if (this.participant.formFieldKey) {
         this.participant.formFieldKey = null
       }
@@ -488,7 +298,7 @@ export default {
         }
       }
     },
-    participant: {
+    'participant': {
       deep: true,
       handler() {
         if (this.node.read() && this.node.model.errorState) {
@@ -498,7 +308,7 @@ export default {
         this.handleUpdateProps('participant')
       }
     },
-    opinionSetting: {
+    'opinionSetting': {
       deep: true,
       handler(val) {
         if (!val.writeSignatureEnabled) {
@@ -529,12 +339,6 @@ export default {
     canTransfer() {
       this.handleUpdateProps('canTransfer')
     },
-    /* transfer: {
-    deep: true,
-    handler() {
-      this.handleUpdateProps('transfer')
-    },
-  }, */
     canRollback() {
       if (!this.canRollback) {
         this.isDirectRollback = false
@@ -570,13 +374,6 @@ export default {
         this.isDirectRollback = val !== ROLLBACK_ENUM.SEQUENCE
       }
     }
-    /* isTransfer(val) {
-    if (val) {
-      this.pickerType = PARTICIPANT_PICKER_TYPES[TRANSFER_TYPE]
-    } else {
-      this.pickerType = null
-    }
-  }, */
   },
   created() {
     if (this.isOptionalPersonal) {
@@ -591,49 +388,17 @@ export default {
     } else {
       checkDoesUserExist(this.participant)
     }
-
-    this.APPROVE_ORDER_TYPE = APPROVE_ORDER_TYPE
   },
   methods: {
-    emitInitiator() {
-      this.$nextTick(() => {
-        this.$emit('initiatorChange', this.formData.initiator, this.$refs['org-select'].selectedLabels)
+    input(data) {
+      // eslint-disable-next-line no-undef
+      const temp = data.u_user.map(x => x.userName).join()
+      console.log(temp)
+      this.participant.list = data.u_user
+      this.node &&
+      this.node.update({
+        'content': temp
       })
-    },
-    generateBtnName() {
-      if (
-        [
-          OPTIONAL_SCOPE_KEYS.ASSIGN_POSITION_LABEL,
-          OPTIONAL_SCOPE_KEYS.ASSIGN_POSITION,
-          OPTIONAL_SCOPE_KEYS.ASSIGN_USER
-        ].includes(this.participant.optionalScope)
-      ) {
-        const scope = (
-          this.optionalScope.find(
-            (i) => i.value === this.participant.optionalScope
-          ) || {}
-        ).label
-        if (scope) {
-          return `选择${scope.substring(2)}`
-        }
-      }
-    },
-    handleOptional() {
-      if (
-        this.participant.optionalScope ===
-        OPTIONAL_SCOPE_KEYS.ASSIGN_POSITION_LABEL
-      ) {
-        this.stationVisible = true
-      } else {
-        this.pickerType =
-          this.participant.optionalScope ===
-          OPTIONAL_SCOPE_KEYS.ASSIGN_POSITION
-            ? SUBMIT_PICKER_TYPES.ROLE
-            : SUBMIT_PICKER_TYPES.USER
-      }
-    },
-    handleScopeClose(index) {
-      this.participant.list.splice(index, 1)
     },
     /**
      * @description 如果 node 节点的 props 中已存在该值，则取它的值，否则取 defaultSettings 的默认值
@@ -673,7 +438,7 @@ export default {
 
       return []
     },
-    /* update node model */
+    /* 修改node信息 */
     handleChange(val) {
       this.node &&
       this.node.update({
@@ -682,6 +447,8 @@ export default {
     },
     /* update node props */
     handleUpdateProps(key) {
+      console.log('key', key)
+      console.log('key', this[key])
       this.node &&
       this.node.updateProps({
         [key]: this[key]
@@ -760,16 +527,6 @@ export default {
     handleClearTags() {
       this.participant.list = []
     }
-    /* handleAddTransfers() {
-    this.isTransfer = true
-  }, */
-    /* handleConfirmTransfers(values) {
-    this.isTransfer = false
-    this.transfer = {
-      type: TRANSFER_TYPE,
-      list: values,
-    }
-  }, */
   }
 }
 </script>

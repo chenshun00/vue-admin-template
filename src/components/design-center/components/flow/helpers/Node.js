@@ -4,7 +4,7 @@ import {
   createChildNode,
   isBranchChildNode,
   isBranchNode,
-  removeOldNode,
+  removeOldNode
 } from './NodeUtils'
 import FlowNodeType from '../constants/FLOW_NODE_TYPE_ENUM'
 import { LOGIC_SIGN_NAME } from '../../../constants/LOGICAL_SIGN'
@@ -23,6 +23,7 @@ export default class Node {
 
   // static UUID_MAP = {}
   /* https://github.com/reduxjs/redux/blob/master/src/utils/actionTypes.js#L8 */
+
   /* https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript */
   static getUUID(prefix = 'uuid', type) {
     // if (process.env.NODE_ENV !== 'development') type = ''
@@ -147,7 +148,7 @@ export default class Node {
     } else {
       if (typeof val === 'string') {
         this.update({
-          content: val,
+          content: val
         })
       } else {
         if (
@@ -162,16 +163,16 @@ export default class Node {
             content:
               list && list.length
                 ? (list || [])
-                    .map(
-                      (item) =>
-                        `${item.name}${
-                          item.parentFullName
-                            ? '(' + item.parentFullName + ')'
-                            : ''
-                        }`
-                    )
-                    .join('，')
-                : '',
+                  .map(
+                    (item) =>
+                      `${item.name}${
+                        item.parentFullName
+                          ? '(' + item.parentFullName + ')'
+                          : ''
+                      }`
+                  )
+                  .join('，')
+                : ''
           })
         } else if (this.type === Node.TYPE.CONDITION_NODE) {
           const { conditions, fields } = val
@@ -204,14 +205,14 @@ export default class Node {
                 value,
                 unionLogic,
                 leftBracket,
-                rightBracket,
+                rightBracket
               }) => {
                 if (!fieldKey || !conditionType || !value) return ''
 
                 if (fieldOptions[fieldKey]) {
                   const options = fieldOptions[fieldKey]
                   const str =
-                    (options.find((item) => Array.isArray(value) ? value.includes(item.value)  : value === item.value) || {})
+                    (options.find((item) => Array.isArray(value) ? value.includes(item.value) : value === item.value) || {})
                       .label || ''
 
                   if (str) {
@@ -229,7 +230,7 @@ export default class Node {
                       ? value.join('、')
                       : value.map(({ name }) => name).join('、')
                     : value,
-                  rightBracket && '）',
+                  rightBracket && '）'
                 ]
                   .filter(Boolean)
                   .join('')
@@ -239,7 +240,7 @@ export default class Node {
             .join('，')
 
           this.update({
-            content,
+            content
           })
         }
       }
@@ -251,6 +252,7 @@ export default class Node {
    * @memberof Node
    * @param {string|{type: string, [props: string]: any}} opts
    */
+
   /* create */
   add(opts) {
     return createChildNode(this, opts)
@@ -260,6 +262,7 @@ export default class Node {
    * 从原集合中删除旧节点 x
    * @memberof Node
    */
+
   /* delete */
   remove() {
     return removeOldNode(this)
@@ -313,14 +316,14 @@ export default class Node {
   updateModel(opts = {}) {
     this.model = {
       ...this.model,
-      ...opts,
+      ...opts
     }
   }
 
   updateProps(opts = {}) {
     this.props = {
       ...this.props,
-      ...opts,
+      ...opts
     }
   }
 }

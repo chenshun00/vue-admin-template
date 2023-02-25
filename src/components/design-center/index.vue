@@ -17,18 +17,18 @@
       :visible.sync="visible"
     />
 
-    <ConditionSettings
-      v-if="currNode && conditionVisible"
-      :node="currNode"
-      :fields="conditionFields"
-      :using-condition-fields="usingConditionFields"
-      :visible.sync="conditionVisible"
-    >
-      <template slot="title">
-        流转条件设置
-        <span style="color: red">(表单必填字段可作为审批条件)</span>
-      </template>
-    </ConditionSettings>
+    <!--    <ConditionSettings-->
+    <!--      v-if="currNode && conditionVisible"-->
+    <!--      :node="currNode"-->
+    <!--      :fields="conditionFields"-->
+    <!--      :using-condition-fields="usingConditionFields"-->
+    <!--      :visible.sync="conditionVisible"-->
+    <!--    >-->
+    <!--      <template slot="title">-->
+    <!--        流转条件设置-->
+    <!--        <span style="color: red">(表单必填字段可作为审批条件)</span>-->
+    <!--      </template>-->
+    <!--    </ConditionSettings>-->
   </div>
 </template>
 
@@ -147,7 +147,7 @@ export default {
         }))
         .concat(
           this.formFields
-            .filter(({ type, options: { multiple, required }}) => {
+            .filter(({ type, options: { multiple, required } }) => {
               const conditionType = CONDITION_FIELD_TYPES[type]
               // 如果是业务流程，则条件字段都必须提前就是必填项
               // if (this.isBusinessFlow) {
@@ -162,7 +162,7 @@ export default {
               }
             })
             .map(
-              ({ type, key, name, options: { options: fieldOptions }}) => ({
+              ({ type, key, name, options: { options: fieldOptions } }) => ({
                 fieldKey: key,
                 fieldName: name,
                 fieldType: type,
@@ -376,6 +376,7 @@ export default {
         }
       })
     },
+    // 应该是生成节点信息
     geneFlowModel(ignoreError) {
       if (process.env.NODE_ENV === 'development') {
         console.log('ignoreError: ', ignoreError)
@@ -395,6 +396,7 @@ export default {
 
       return flowModel
     },
+    // 暂时没看懂
     handleSave(test) {
       try {
         if (test) {
@@ -416,6 +418,7 @@ export default {
         })
       }
     },
+    // 暂时没有看到接口信息
     handleRelease() {
       try {
         this.$store.commit('workFlow/setDesignProcess', this.geneFlowModel())
@@ -434,6 +437,7 @@ export default {
         this.$router.push({ path })
       })
     },
+    // 修改当前接口，用户展现侧边栏以及其他信息
     handleClickNode(node) {
       this.currNode = node
 

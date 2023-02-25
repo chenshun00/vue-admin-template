@@ -7,6 +7,7 @@
       v-bind="$attrs"
       v-on="$listeners"
     ></component>
+    {{$attrs}}
     <BaseAddBtn
       v-if="showAddBtn"
       v-bind="$attrs"
