@@ -1,13 +1,22 @@
 <template>
   <div class="setting-container">
-    <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px"
-             label-position="top"
+    <el-form
+      ref="elForm"
+      :model="formData"
+      :rules="rules"
+      size="medium"
+      label-width="100px"
+      label-position="top"
     >
       <el-form-item label="审批人去重" prop="autoRepeat">
         <el-select v-model="formData.autoRepeat" placeholder="请选择去重类型" :style="{width: '100%'}">
-          <el-option v-for="(item, index) in autoRepeatOptions" :key="index" :label="item.label"
-                     :value="item.value" :disabled="item.disabled"
-          ></el-option>
+          <el-option
+            v-for="(item, index) in autoRepeatOptions"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.disabled"
+          />
         </el-select>
         <el-checkbox v-model="formData.myAuditAutoPass">发起人审批时自动通过</el-checkbox>
       </el-form-item>
@@ -16,9 +25,15 @@
         <el-checkbox v-model="formData.notVisibleForSponsor">对发起人不可见</el-checkbox>
       </el-form-item>
       <el-form-item label="审批意见填写提示" prop="remarkTip">
-        <el-input v-model="formData.remarkTip" type="textarea" placeholder="请输入" :maxlength="100"
-                  show-word-limit :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"
-        ></el-input>
+        <el-input
+          v-model="formData.remarkTip"
+          type="textarea"
+          placeholder="请输入"
+          :maxlength="100"
+          show-word-limit
+          :autosize="{minRows: 4, maxRows: 4}"
+          :style="{width: '100%'}"
+        />
       </el-form-item>
     </el-form>
   </div>
@@ -30,9 +45,9 @@ export default {
   data() {
     return {
       formData: {
-        autoRepeat: false, //审批人去重
-        myAuditAutoPass: false, //发起人审批时自动通过
-        remarkTip: '', //审批意见填写提示
+        autoRepeat: false, // 审批人去重
+        myAuditAutoPass: false, // 发起人审批时自动通过
+        remarkTip: '', // 审批意见填写提示
         remarkRequired: false,
         notVisibleForSponsor: false
       },

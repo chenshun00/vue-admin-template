@@ -1,34 +1,36 @@
 <template>
-  <div class="flow-container">
-    <FlowLayout
-      :fields="flowFields"
-      :root-node="startNode"
-      :curr-node="currNode"
-      @click-node="handleClickNode"
-      @update-node="handleUpdateNode"
-    />
+  <div ref="">
+    <div class="flow-container">
+      <FlowLayout
+        :fields="flowFields"
+        :root-node="startNode"
+        :curr-node="currNode"
+        @click-node="handleClickNode"
+        @update-node="handleUpdateNode"
+      />
 
-    <SidePanel
-      ref="panel"
-      :node="currNode"
-      :project-only="!!projectSysNo"
-      :join-plan="joinPlan"
-      :fields="flowFields"
-      :visible.sync="visible"
-    />
+      <SidePanel
+        ref="panel"
+        :node="currNode"
+        :project-only="!!projectSysNo"
+        :join-plan="joinPlan"
+        :fields="flowFields"
+        :visible.sync="visible"
+      />
 
-    <!--    <ConditionSettings-->
-    <!--      v-if="currNode && conditionVisible"-->
-    <!--      :node="currNode"-->
-    <!--      :fields="conditionFields"-->
-    <!--      :using-condition-fields="usingConditionFields"-->
-    <!--      :visible.sync="conditionVisible"-->
-    <!--    >-->
-    <!--      <template slot="title">-->
-    <!--        流转条件设置-->
-    <!--        <span style="color: red">(表单必填字段可作为审批条件)</span>-->
-    <!--      </template>-->
-    <!--    </ConditionSettings>-->
+      <ConditionSettings
+        v-if="currNode && conditionVisible"
+        :node="currNode"
+        :fields="conditionFields"
+        :using-condition-fields="usingConditionFields"
+        :visible.sync="conditionVisible"
+      >
+        <template slot="title">
+          流转条件设置
+          <span style="color: red">(表单必填字段可作为审批条件)</span>
+        </template>
+      </ConditionSettings>
+    </div>
   </div>
 </template>
 
@@ -59,7 +61,6 @@ export default {
   components: {
     SidePanel,
     FlowLayout,
-    // BaseMessageDialog,
     ConditionSettings
   },
   data() {
@@ -147,7 +148,7 @@ export default {
         }))
         .concat(
           this.formFields
-            .filter(({ type, options: { multiple, required } }) => {
+            .filter(({ type, options: { multiple, required }}) => {
               const conditionType = CONDITION_FIELD_TYPES[type]
               // 如果是业务流程，则条件字段都必须提前就是必填项
               // if (this.isBusinessFlow) {
@@ -162,7 +163,7 @@ export default {
               }
             })
             .map(
-              ({ type, key, name, options: { options: fieldOptions } }) => ({
+              ({ type, key, name, options: { options: fieldOptions }}) => ({
                 fieldKey: key,
                 fieldName: name,
                 fieldType: type,
@@ -395,6 +396,15 @@ export default {
       console.log('flowModel: ', flowModel)
 
       return flowModel
+    },
+    getData() {
+      return new Promise((resolve, reject) => {
+        resolve({
+          formData: {
+            fields: this.geneFlowModel(true)
+          }
+        })
+      })
     },
     // 暂时没看懂
     handleSave(test) {

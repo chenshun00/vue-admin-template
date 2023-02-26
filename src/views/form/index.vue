@@ -23,7 +23,7 @@
         <el-tab-pane name="processDesign" label="流程设计">
           <design-center
             v-show="activeStep === 'processDesign'"
-            ref="designCenter"
+            ref="processDesign"
             tab-name="processDesign"
             @startNodeChange="onStartChange"
           />
@@ -98,14 +98,14 @@ export default {
       // advancedSetting返回的就是值
       const p1 = getCmpData('basicSetting')
       const p2 = getCmpData('formDesign')
-      // const p3 = getCmpData('processDesign')
-      Promise.all([p1, p2])
+      const p3 = getCmpData('processDesign')
+      Promise.all([p1, p2, p3])
         .then(res => {
           const param = {
             basicSetting: res[0]['formData'],
-            formDesign: res[1]['formData']
-            // processData: res[2].formData,
-            // advancedSetting: getCmpData('advancedSetting')
+            formDesign: res[1]['formData'],
+            processDesign: res[2]['formData'],
+            advancedSetting: getCmpData('advancedSetting')
           }
           this.sendToServer(param)
         })
