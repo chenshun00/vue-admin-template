@@ -1,14 +1,6 @@
 <template>
   <div class="container">
     <div class="left-board">
-<!--      <div class="logo-wrapper">-->
-<!--        <div class="logo">-->
-<!--          <img :src="logo" alt="logo"> Form Generator-->
-<!--          <a class="github" href="https://github.com/JakHuang/form-generator" target="_blank">-->
-<!--            <img src="https://github.githubassets.com/pinned-octocat.svg" alt>-->
-<!--          </a>-->
-<!--        </div>-->
-<!--      </div>-->
       <el-scrollbar class="left-scrollbar">
         <div class="components-list">
           <div v-for="(item, listIndex) in leftComponents" :key="listIndex">
@@ -113,7 +105,6 @@ import draggable from 'vuedraggable'
 import { debounce } from 'throttle-debounce'
 import { saveAs } from 'file-saver'
 import FormDrawer from './FormDrawer'
-import JsonDrawer from './JsonDrawer'
 import RightPanel from './RightPanel'
 import { formConf, inputComponents, layoutComponents, selectComponents } from '@/components/generator/config'
 import { beautifierConf, deepClone, isObjectObject, titleCase } from '@/utils'
@@ -121,7 +112,6 @@ import { cssStyle, makeUpHtml, vueScript, vueTemplate } from '@/components/gener
 import { makeUpJs } from '@/components/generator/js'
 import { makeUpCss } from '@/components/generator/css'
 import drawingDefalut from '@/components/generator/drawingDefalut'
-import logo from '@/assets/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
 import { getDrawingList, getFormConf, getIdGlobal, saveDrawingList, saveIdGlobal } from '@/utils/db'
@@ -135,18 +125,16 @@ const formConfInDB = getFormConf()
 const idGlobal = getIdGlobal()
 
 export default {
-  name: 'Generator',
+  name: 'DynamicForm',
   components: {
     draggable,
     FormDrawer,
-    JsonDrawer,
     RightPanel,
     CodeTypeDialog,
     DraggableItem
   },
   data() {
     return {
-      logo,
       idGlobal,
       formConf,
       inputComponents,
@@ -321,6 +309,17 @@ export default {
         ...this.formConf
       }
     },
+    // 给父级页面提供得获取本页数据得方法
+    getData() {
+      return new Promise((resolve, reject) => {
+        resolve({
+          formData: {
+            fields: deepClone(this.drawingList),
+            conf: this.formConf
+          }
+        })
+      })
+    },
     generate(data) {
       const func = this[`exec${titleCase(this.operationType)}`]
       this.generateConf = data
@@ -331,22 +330,6 @@ export default {
     execRun(data) {
       this.AssembleFormData()
       this.drawerVisible = true
-    },
-    execDownload(data) {
-      const codeStr = this.generateCode()
-      const blob = new Blob([codeStr], { type: 'text/plain;charset=utf-8' })
-      saveAs(blob, data.fileName)
-    },
-    execCopy(data) {
-      document.getElementById('copyNode').click()
-    },
-    empty() {
-      this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' }).then(
-        () => {
-          this.drawingList = []
-          this.idGlobal = 100
-        }
-      )
     },
     drawingItemCopy(item, list) {
       let clone = deepClone(item)

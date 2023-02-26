@@ -49,9 +49,9 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: '首页',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
 
@@ -77,7 +77,7 @@ export const constantRoutes = [
       {
         path: 'generator',
         name: 'Generator',
-        component: () => import('@/views/generator/index'),
+        component: () => import('@/views/formDesign/index'),
         meta: { title: '工单中心', icon: 'el-icon-table-lamp' }
       },
       {
@@ -103,18 +103,18 @@ export const constantRoutes = [
     ]
   },
 
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/form2',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: '自定义表单',
+        component: () => import('@/views/form/index'),
+        meta: { title: '自定义表单', icon: 'form' }
+      }
+    ]
+  },
 
   {
     path: '/nested',

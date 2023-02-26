@@ -15,7 +15,7 @@
         <basic-setting/>
       </el-tab-pane>
       <el-tab-pane name="form" label="表单配置">
-        <generator/>
+        <dynamic-form/>
       </el-tab-pane>
       <el-tab-pane name="process" label="流程配置">
         <DesignCenter/>
@@ -30,11 +30,11 @@
 
 <script>
 import BasicSetting from '@/components/BasicSetting/index.vue'
-import Generator from '@/views/generator/index.vue'
+import DynamicForm from '@/views/formDesign/index.vue'
 import DesignCenter from '@/components/design-center'
 
 export default {
-  components: { BasicSetting, Generator, DesignCenter },
+  components: { BasicSetting, DynamicForm, DesignCenter },
   data() {
     return {
       tabPosition: 'left',

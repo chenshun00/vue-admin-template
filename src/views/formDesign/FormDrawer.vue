@@ -75,7 +75,7 @@ import { makeUpCss } from '@/components/generator/css'
 import { beautifierConf, exportDefault } from '@/utils/index'
 import loadMonaco from '@/utils/loadMonaco'
 import loadBeautifier from '@/utils/loadBeautifier'
-import resourceDialog from '@/views/generator/ResourceDialog'
+import resourceDialog from '@/views/formDesign/ResourceDialog'
 
 const editorObj = {
   html: null,

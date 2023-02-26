@@ -658,7 +658,7 @@
 
 <script>
 import { isArray } from 'util'
-import TreeNodeDialog from '@/views/generator/TreeNodeDialog'
+import TreeNodeDialog from '@/views/formDesign/TreeNodeDialog'
 import { isNumberStr } from '@/utils/index'
 import IconsDialog from './IconsDialog'
 import {
