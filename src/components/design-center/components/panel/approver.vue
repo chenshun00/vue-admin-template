@@ -23,7 +23,7 @@
       </el-select>
 
       <!-- 是否展现 <添加指定人员的button> -->
-      <div v-if="this.participant.type==='assign'" class="flow-panel-button">
+      <div v-if="participant.type==='assign'" class="flow-panel-button">
         <fc-user-select
           ref="org-select"
           v-model="participant.list"
@@ -45,11 +45,7 @@ import Node from '../flow/helpers/Node'
 import PanelBlock from './_base-block'
 import FLOW_NODE_TYPE_ENUM from '../flow/constants/FLOW_NODE_TYPE_ENUM'
 import FLOW_NODE_TYPE_PROPS from '../flow/constants/FLOW_NODE_TYPE_PROPS'
-import {
-  OPTIONAL_TYPE_ENUM,
-  OPTIONAL_SCOPE_ENUM,
-  OPTIONAL_SCOPE_KEYS
-} from './../../constants/OPTIONAL_PERSONAL'
+import { OPTIONAL_SCOPE_ENUM, OPTIONAL_SCOPE_KEYS, OPTIONAL_TYPE_ENUM } from './../../constants/OPTIONAL_PERSONAL'
 import { ROLLBACK_ENUM } from './../../constants/ROLLBACK_ENUM'
 import { checkDoesUserExist } from '../../service'
 import { deepCopy } from '../../utils/index'
@@ -58,18 +54,12 @@ import {
   FORM_FIELDS_KEYS,
   FORM_FIELDS_TYPES,
   NO_AUDIT_TYPES,
-  // NO_AUDIT_TYPES_NAME,
   PARTICIPANT_TYPES,
   PARTICIPANT_TYPES_NAME,
-  PEOPLE_TYPES_KEY_MAP,
-  SUBMIT_PICKER_TYPES
+  PEOPLE_TYPES_KEY_MAP
 } from '../../constants/ENUM_DEFINITIONS'
 import { objectToOptions } from '../../utils/objectToOptions'
-import draggable from 'vuedraggable'
-import {
-  APPROVE_ORDER_TYPE,
-  APPROVE_ORDER_ENUM
-} from '../../constants/POSITION_LABEL_SELECTION'
+import { APPROVE_ORDER_ENUM, APPROVE_ORDER_TYPE } from '../../constants/POSITION_LABEL_SELECTION'
 
 const fileds2options = (arr) =>
   arr.map(({ fieldKey, fieldName }) => ({
@@ -81,7 +71,6 @@ export default {
   name: 'ApproverPanel',
   type: FLOW_NODE_TYPE_ENUM.APPROVER_NODE,
   components: {
-    Draggable: draggable,
     PanelBlock,
     FcUserSelect
   },
@@ -259,7 +248,13 @@ export default {
       }
     },
     'participant.list'(val) {
-      if (this.isSelf) {
+      if (this.participant.type === 'assign') {
+        if (val['u_user']) {
+          this.node.read(val['u_user'].map(x => x.userName).join())
+        } else {
+          this.node.read(undefined)
+        }
+      } else if (this.isSelf) {
         this.node.read(this.participantTypes[this.participant.type])
       } else if (this.showSelect) {
         const text =
@@ -381,16 +376,7 @@ export default {
   },
   methods: {
     input(data) {
-      // eslint-disable-next-line no-undef
-      const temp = data.u_user.map(x => x.userName).join()
-      console.log(temp)
-      this.node &&
-      this.node.update({
-        'content': temp
-      })
-      this.node.updateProps({
-        'list': data.u_user
-      })
+
     },
     /**
      * @description 如果 node 节点的 props 中已存在该值，则取它的值，否则取 defaultSettings 的默认值

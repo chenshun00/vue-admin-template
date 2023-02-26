@@ -11,7 +11,6 @@
       >
         添加指定人员
       </el-button>
-      {{selectedData}}
       <div class="input-box" :class="{'as-input': buttonType === 'input'}" @click="show = true">
         <el-tag
           v-for="item in selectedData"
@@ -56,7 +55,7 @@ export default {
     },
     tabList: {
       type: Array,
-      default: () => (['dep'])
+      default: () => (['u_user'])
     },
     title: {
       type: String,
@@ -77,7 +76,7 @@ export default {
     tagConfig: {
       type: Object,
       default: () => ({
-        type: 'info',
+        type: 'success',
         closable: true,
         'disable-transitions': false,
         hit: false,
@@ -89,7 +88,7 @@ export default {
   },
   data() {
     return {
-      tabKeys: [],
+      tabKeys: ['u_user'],
       show: false,
       innerValue: null,
       selectedData: []
@@ -108,14 +107,6 @@ export default {
       },
       immediate: true,
       deep: true
-    },
-    tabList: {
-      handler: function(val) {
-        this.tabKeys = []
-        val.forEach(t => this.tabKeys.push(typeof t === 'string' ? t : t.key))
-        this.reloadCmpData()
-      },
-      immediate: true
     }
   },
   methods: {

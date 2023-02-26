@@ -1,9 +1,9 @@
-
 <template>
   <section
     v-if="show"
     class="h-transfer"
-    :class="[tabConfig.length == 1 ? 'single-tab' : '']" >
+    :class="[tabConfig.length == 1 ? 'single-tab' : '']"
+  >
     <div class="mask"></div>
     <!-- 内容面板 -->
     <div class="transfer__content">
@@ -11,7 +11,7 @@
       <header class="transfer__header">
         <i class="el-icon-monitor"></i>
         {{ title }}
-        <i class="el-icon-close" @click="closeTransfer" ></i>
+        <i class="el-icon-close" @click="closeTransfer"></i>
       </header>
       <!-- 穿梭框主要内容 -->
       <div class="transfer__body">
@@ -71,7 +71,7 @@
             </template>
           </el-scrollbar>
           <footer class="transfer__footer">
-            <el-button type="info" plain size="mini" @click="confirm" >确定</el-button >
+            <el-button type="info" plain size="mini" @click="confirm">确定</el-button>
             <el-button plain size="mini" @click="closeTransfer">取消</el-button>
           </footer>
         </div>
@@ -90,13 +90,15 @@
             <div
               class="searchResPane"
               :class="{ active: searchMode }"
-              v-loading="searchLoading" >
+              v-loading="searchLoading"
+            >
               <div class="hidden-tag" @click="searchString = ''">关闭</div>
               <div v-for="(item, index) in searchRes" :key="index" class="item">
                 <div>
                   <div>{{ getNodeProp(item, 'label') }}</div>
                 </div>
-                <el-checkbox @change="checked => checked ? addData(item) : removeData(item, activeTabName, true)"></el-checkbox>
+                <el-checkbox @change="checked => checked ? addData(item) : removeData(item, activeTabName, true)"
+                ></el-checkbox>
               </div>
             </div>
 
@@ -106,7 +108,9 @@
                 type="border-card"
                 style="min-height: 370px;"
               >
-                <el-tab-pane v-for="(tab_item, idx) in tabConfig" :name="tab_item.tabKey" :label="tab_item.tabName" :key="idx">
+                <el-tab-pane v-for="(tab_item, idx) in tabConfig" :name="tab_item.tabKey" :label="tab_item.tabName"
+                             :key="idx"
+                >
                   <el-tree
                     :ref="tab_item.tabKey"
                     lazy
@@ -176,7 +180,7 @@ export default {
       default: 99
     }
   },
-  data () {
+  data() {
 
     return {
       searchRes: [],  // 搜索后的结果
@@ -192,7 +196,7 @@ export default {
     }
   },
   computed: {
-    selectedNum () {
+    selectedNum() {
       let num = 0
       for (const key of this.tabKeys) {
         const data1 = this.selectedData[key]
@@ -203,21 +207,21 @@ export default {
       return num
     }
   },
-  mounted () {
+  mounted() {
     this.isNumEnough()
     this.debounceSearch = debounce(this.searchDepUser, 500)
   },
   methods: {
-    onLoad (node, resolve) {
-      const conf= this.tabConfig
+    onLoad(node, resolve) {
+      const conf = this.tabConfig
         .find(t => t.tabKey === this.activeTabName)
       // load 方法返回一个promise
       conf.onload(node)
         .then(res => {
-          const nodes = res.map( t => ( { nodeId: conf.nodeId(t), ...t } ) )
+          const nodes = res.map(t => ({ nodeId: conf.nodeId(t), ...t }))
           resolve(nodes)
         })
-        .then(res=>{
+        .then(res => {
           for (const tabKey of this.tabKeys) {
             const tree = this.$refs[tabKey][0]
             this.aloneCheckedData[tabKey].forEach(data => {
@@ -227,7 +231,7 @@ export default {
         })
     },
 
-    searchDepUser () {
+    searchDepUser() {
       if (!this.searchString) {
         this.searchRes = []
         return
@@ -244,7 +248,7 @@ export default {
         .finally(() => this.searchLoading = false)
     },
 
-    onCheckChange (data, checked, tabKey) {
+    onCheckChange(data, checked, tabKey) {
       this.activeTabName = tabKey
       const index = this.aloneCheckedData[tabKey].findIndex(t => t.nodeId === data.nodeId)
       if (index > -1) {
@@ -256,13 +260,13 @@ export default {
           !t.nodeId && (t.nodeId = this.getNodeProp(t, 'nodeId', this.activeTabName))
           return t
         })
-        this.$set(this.selectedData, this.activeTabName,nodes )
+        this.$set(this.selectedData, this.activeTabName, nodes)
         this.isNumEnough()
         this.$forceUpdate()
       })
     },
 
-    addData (data) {
+    addData(data) {
       const tabKey = this.activeTabName
       const tree = this.$refs[tabKey][0]
       tree.setChecked(data.nodeId, true)
@@ -271,7 +275,7 @@ export default {
       && this.aloneCheckedData[tabKey].push(data)
     },
 
-    removeData (data, tabKey, fromAloneData = false) {
+    removeData(data, tabKey, fromAloneData = false) {
       if (fromAloneData) {
         const index = this.aloneCheckedData[tabKey].findIndex(t => t.nodeId === data.nodeId)
         index > -1 && this.aloneCheckedData[tabKey].splice(index, 1)
@@ -280,7 +284,7 @@ export default {
       }
     },
 
-    removeAll () {
+    removeAll() {
       for (const type of this.tabKeys) {
         const tree = this.$refs[type][0]
         tree.getCheckedKeys().forEach(key => {
@@ -291,7 +295,7 @@ export default {
       }
     },
 
-    isNumEnough () {
+    isNumEnough() {
       let count = 0
       for (const type of this.tabKeys) {
         count += this.selectedData[type].length
@@ -300,14 +304,14 @@ export default {
       this.isEnough = count >= this.maxNum
     },
 
-    closeTransfer () {
+    closeTransfer() {
       this.$emit('update:show', false)
       this.tabKeys = []
       this.isEnough = false
       this.searchString = ''
     },
 
-    confirm () {
+    confirm() {
       const res = {}
       for (const type of this.tabKeys) {
         res[type] = this.selectedData[type].concat(this.aloneCheckedData[type])
@@ -316,32 +320,32 @@ export default {
       this.closeTransfer()
     },
 
-    getActiveConf(tabKey){
+    getActiveConf(tabKey) {
       const target = tabKey || this.activeTabName
       return this.tabConfig.find(t => t.tabKey === target)
     },
 
-    getConfProp(propName, tabKey){
+    getConfProp(propName, tabKey) {
       const conf = this.getActiveConf(tabKey)
       return conf ? conf[propName] : null
     },
 
-    getNodeProp(data, propName, tabKey){
-      try{
+    getNodeProp(data, propName, tabKey) {
+      try {
         const prop = this.getConfProp(propName, tabKey)
-        if(typeof prop === 'string'){
+        if (typeof prop === 'string') {
           return data[prop]
         }
-        if(typeof prop === 'function'){
+        if (typeof prop === 'function') {
           return prop(data)
         }
-      }catch(e){
+      } catch (e) {
         console.error(e)
         return '执行出错，可联系开发人员'
       }
     },
 
-    dataInit(){
+    dataInit() {
       this.aloneCheckedData = {}
       this.selectedData = {}
       this.tabConfig = []
@@ -350,7 +354,7 @@ export default {
       const initDefaultData = (key, mergedConfig) => {
         this.tabConfig.push(mergedConfig)
         this.tabKeys.push(key)
-        let  data = this.value && this.value[key] ? this.value[key] : []
+        let data = this.value && this.value[key] ? this.value[key] : []
         data = data.map(t => ({ nodeId: mergedConfig.nodeId(t), ...t }))
         this.$set(this.aloneCheckedData, key, data)
       }
@@ -365,13 +369,13 @@ export default {
     }
   },
   watch: {
-    searchString (newVal) {
+    searchString(newVal) {
       this.searchMode = !!newVal
       this.debounceSearch()
     },
 
     show: {
-      handler: function (show) {
+      handler: function(show) {
         if (show) {
           this.dataInit()
           this.isNumEnough()
@@ -380,8 +384,8 @@ export default {
       immediate: true
     },
 
-    tabList:{
-      handler: function(val){
+    tabList: {
+      handler: function(val) {
         this.dataInit() // tablist 比show 延后
       },
       immediate: true,
@@ -391,7 +395,7 @@ export default {
 }
 </script>
 <style lang="stylus">
-.h-transfer{
+.h-transfer {
   text-align: left;
   position: fixed;
   width: 100vw;
@@ -440,7 +444,7 @@ export default {
     // right: 0;
   }
 
-  .searchResPane{
+  .searchResPane {
     position: absolute;
     overflow-y: auto;
     z-index: 99;
@@ -453,45 +457,45 @@ export default {
     transition: top .5s;
 
 
-
-    &.active{
+    &.active {
       top: 0;
     }
 
-    .hidden-tag{
-      color:#999;
-      font-size:12px;
-      text-align:right;
-      padding-top:4px;
-      padding-right:12px;
+    .hidden-tag {
+      color: #999;
+      font-size: 12px;
+      text-align: right;
+      padding-top: 4px;
+      padding-right: 12px;
       cursor pointer
 
-      &:hover{
+      &:hover {
         color: #66b1ff;
       }
     }
 
-    .item{
+    .item {
       padding: 4px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       line-height 1.5
-      &:hover{
+
+      &:hover {
         background-color: #ecf5ff;
         color: #66b1ff;
         cursor: pointer;
       }
 
-      .search-res-tip{
-        font-size:12px;
-        color:#999;
+      .search-res-tip {
+        font-size: 12px;
+        color: #999;
         max-width: 280px;
       }
     }
   }
 
-  .enough-mask{
+  .enough-mask {
     position: absolute;
     left: 0;
     top: 0;
@@ -500,11 +504,11 @@ export default {
     font-size: 16px;
     z-index: 100;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     letter-spacing: 4px;
   }
 
-  .p-center{
+  .p-center {
     position absolute
     top 50%
     left 50%
@@ -527,8 +531,9 @@ export default {
     background: #565656;
     padding: 6px 24px;
     color: white;
-    .el-icon-close{
-      cursor:pointer;
+
+    .el-icon-close {
+      cursor: pointer;
       float: right;
       margin-top: 10px;
     }
@@ -544,10 +549,12 @@ export default {
   .transfer-pane {
     width: 360px;
   }
-  .search-input  input{
+
+  .search-input input {
     border: 1px solid #DCDFE6 !important;
-    &:focus{
-      border-color:#409EFF !important;
+
+    &:focus {
+      border-color: #409EFF !important;
     }
   }
 
@@ -557,7 +564,6 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
 
 
     span:last-child {
@@ -572,7 +578,7 @@ export default {
     overflow hidden
     font-size: 14px;
 
-    >>> .el-scrollbar__view{
+    >>> .el-scrollbar__view {
       height: 100%;
     }
 
@@ -663,7 +669,7 @@ export default {
     }
   }
 
-  .dot{
+  .dot {
     width: 2px;
     height: 2px;
     display: inline-block;
@@ -671,7 +677,7 @@ export default {
     background: #4caf50;
   }
 
-  .text-ellipsis{
+  .text-ellipsis {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

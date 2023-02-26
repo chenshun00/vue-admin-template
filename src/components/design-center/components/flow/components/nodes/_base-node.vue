@@ -12,7 +12,7 @@
           </div>
 
           <slot v-if="$slots.title" name="title"></slot>
-          <span v-else>{{title}}</span>
+          <span v-else>{{ title }}</span>
         </div>
 
         <a
@@ -27,17 +27,13 @@
       </template>
     </div>
 
-    <div
-      v-if="errorState || content || placeholder"
-      class="node-content"
-      :title="errorState || content || '点击设置'"
-    >
+    <div class="node-content">
       <div class="node-content-text">
-        <span v-if="errorState" class="error-message">{{errorState}}</span>
+        <span v-if="errorState" class="error-message">{{ errorState }}</span>
         <slot v-else-if="content">
-          <template>{{content}}</template>
+          <template>{{ content }}</template>
         </slot>
-        <span v-else class="placeholder">{{placeholder}}</span>
+        <span v-else class="placeholder">{{ placeholder }}</span>
       </div>
 
       <div v-if="contentIcon && editable" class="node-content-icon">
@@ -68,7 +64,7 @@ export default {
       false
     ),
     // eslint-disable-next-line
-    node: PropTypes.instanceOf(Node).required,
+    node: PropTypes.instanceOf(Node).required
   },
   methods: {
     handleRemoveNode() {

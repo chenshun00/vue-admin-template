@@ -54,65 +54,65 @@
 </template>
 
 <script>
-  import PropTypes from 'vue-types'
-  import Node from '../helpers/Node'
-  import { needMergeFields } from '../helpers/NodeUtils'
-  import FLOW_ADD_BTN_TYPES from '../constants/FLOW_ADD_BTN_TYPES'
-  import { updateFieldsWhenCreate } from '../../../utils/fieldsHelpers'
+import PropTypes from 'vue-types'
+import Node from '../helpers/Node'
+import { needMergeFields } from '../helpers/NodeUtils'
+import FLOW_ADD_BTN_TYPES from '../constants/FLOW_ADD_BTN_TYPES'
+import { updateFieldsWhenCreate } from '../../../utils/fieldsHelpers'
 
-  export default {
-    name: 'BaseAddBtn',
-    inheritAttrs: false,
-    props: {
-      branchType: PropTypes.oneOf([
-        Node.TYPE.CONDITION_NODE,
-        Node.TYPE.PARALLEL_NODE,
-        false
-      ]).def(false),
-      editable: PropTypes.bool.def(true),
-      // arrowDown: PropTypes.bool.def(true),
-      // eslint-disable-next-line
-      node: PropTypes.instanceOf(Node).required,
-      fields: PropTypes.arrayOf(
-        PropTypes.shape({
-          type: PropTypes.string.def(''),
-          fieldKey: PropTypes.string.isRequired,
-          fieldName: PropTypes.string.isRequired,
-          canView: PropTypes.bool.isRequired,
-          canWrite: PropTypes.bool.isRequired,
-          require: PropTypes.oneOf([true, false, undefined]).isRequired,
-          editable: PropTypes.bool.isRequired,
-          textVisible: PropTypes.bool.isRequired,
-          useCondition: PropTypes.bool.isRequired
-        })
-      )
-    },
-    data() {
-      return {
-        visible: false,
-        types: FLOW_ADD_BTN_TYPES
-      }
-    },
-    methods: {
-      handleAddNode(type) {
-        const opts = this.needMergeFields(type)
-          ? {
-              type,
-              formFieldList: updateFieldsWhenCreate(this.fields)(
-                type === Node.TYPE.PARALLEL_BRANCH
-                  ? Node.TYPE.APPROVER_NODE
-                  : type
-              )
-            }
-          : { type }
-        const node = this.node && this.node.add(opts)
+export default {
+  name: 'BaseAddBtn',
+  inheritAttrs: false,
+  props: {
+    branchType: PropTypes.oneOf([
+      Node.TYPE.CONDITION_NODE,
+      Node.TYPE.PARALLEL_NODE,
+      false
+    ]).def(false),
+    editable: PropTypes.bool.def(true),
+    // arrowDown: PropTypes.bool.def(true),
+    // eslint-disable-next-line
+    node: PropTypes.instanceOf(Node).required,
+    fields: PropTypes.arrayOf(
+      PropTypes.shape({
+        type: PropTypes.string.def(''),
+        fieldKey: PropTypes.string.isRequired,
+        fieldName: PropTypes.string.isRequired,
+        canView: PropTypes.bool.isRequired,
+        canWrite: PropTypes.bool.isRequired,
+        require: PropTypes.oneOf([true, false, undefined]).isRequired,
+        editable: PropTypes.bool.isRequired,
+        textVisible: PropTypes.bool.isRequired,
+        useCondition: PropTypes.bool.isRequired
+      })
+    )
+  },
+  data() {
+    return {
+      visible: false,
+      types: FLOW_ADD_BTN_TYPES
+    }
+  },
+  methods: {
+    handleAddNode(type) {
+      const opts = this.needMergeFields(type)
+        ? {
+          type,
+          formFieldList: updateFieldsWhenCreate(this.fields)(
+            type === Node.TYPE.PARALLEL_BRANCH
+              ? Node.TYPE.APPROVER_NODE
+              : type
+          )
+        }
+        : { type }
+      const node = this.node && this.node.add(opts)
 
-        this.visible = false
-        this.$emit('update-node', node.getRootNode(node))
-      },
-      needMergeFields(type) {
-        return needMergeFields(type) || type === Node.TYPE.PARALLEL_BRANCH
-      }
+      this.visible = false
+      this.$emit('update-node', node.getRootNode(node))
+    },
+    needMergeFields(type) {
+      return needMergeFields(type) || type === Node.TYPE.PARALLEL_BRANCH
     }
   }
+}
 </script>

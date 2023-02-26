@@ -154,7 +154,7 @@ export default {
     // 对象数组需要包含 key/conf 两个属性 conf 会覆盖对应key的默认配置
     tabList: {
       type: Array,
-      default: () => ['dep', 'role']
+      default: () => ['u_user']
     },
     title: {
       type: String,
