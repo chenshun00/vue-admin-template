@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-Vue.use(Router)
-
 /* Layout */
 import Layout from '@/layout'
+
+Vue.use(Router)
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -54,138 +53,53 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
+  // {
+  //   path: '/parser',
+  //   name: 'parser',
+  //   component: Layout,
+  //   meta: { title: '表单解析', icon: 'el-icon-s-help' },
+  //   children: [
+  //     {
+  //       path: 'parser',
+  //       name: 'Parser',
+  //       component: () => import('@/components/parser/example/Index'),
+  //       meta: { title: '表单解析', icon: 'table' }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/form',
     component: Layout,
-    redirect: '/form/table',
-    name: '表单中心',
-    meta: { title: '表单中心', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      },
-      {
-        path: 'generator',
-        name: 'Generator',
-        component: () => import('@/views/formDesign/index'),
-        meta: { title: '工单中心', icon: 'el-icon-table-lamp' }
-      },
-      {
-        path: 'step',
-        name: 'Step',
-        component: () => import('@/views/step/index'),
-        meta: { title: '步骤条', icon: 'el-icon-collection' }
-      }
-    ]
-  },
-  {
-    path: '/parser',
-    name: 'parser',
-    component: Layout,
-    meta: { title: '表单解析', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'parser',
-        name: 'Parser',
-        component: () => import('@/components/parser/example/Index'),
-        meta: { title: '表单解析', icon: 'table' }
-      }
-    ]
-  },
-
-  {
-    path: '/form2',
-    component: Layout,
     children: [
       {
         path: 'index',
-        name: '自定义表单',
+        name: '表单中心',
         component: () => import('@/views/form/index'),
-        meta: { title: '自定义表单', icon: 'form' }
+        meta: { title: '表单中心', icon: 'el-icon-ship' }
       }
     ]
   },
-
   {
-    path: '/nested',
+    path: '/setting',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
+    name: '系统设置',
+    meta: { title: '系统设置', icon: 'el-icon-setting' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        path: 'index',
+        name: '组织管理',
+        component: () => import('@/views/setting/index'),
+        meta: { title: '组织管理', icon: 'el-icon-s-home' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
+        path: 'user',
+        name: '用户管理',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户管理', icon: 'el-icon-user' }
       }
     ]
   },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

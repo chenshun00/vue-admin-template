@@ -49,7 +49,6 @@ import BasicSetting from '@/components/BasicSetting'
 import DynamicForm from '@/views/formDesign/index.vue'
 import DesignCenter from '@/components/design-center'
 import AdvancedSetting from '@/components/AdvancedSetting'
-import { GET_MOCK_CONF } from '@/api'
 
 const beforeUnload = function(e) {
   const confirmationMessage = '离开网站可能会丢失您编辑得内容';
@@ -87,9 +86,7 @@ export default {
     next()
   },
   mounted() {
-    console.log('mounted1')
-    GET_MOCK_CONF().then(data => this.mockData = data)
-    console.log('mounted2')
+    //
   },
   methods: {
     publish() {
