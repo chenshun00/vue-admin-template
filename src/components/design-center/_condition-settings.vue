@@ -207,93 +207,10 @@
                 </el-col>
               </el-row>
             </div>
-
-            <div class="flow-condition-action">
-              <el-button
-                size="mini"
-                icon="el-icon-plus"
-                class="standard"
-                type="primary"
-                plain
-                @click="handleAddCondition(groupIndex, { unionLogic: AND })"
-              >且条件
-              </el-button
-              >
-
-              <el-button
-                size="mini"
-                icon="el-icon-plus"
-                class="standard"
-                type="primary"
-                plain
-                @click="handleAddCondition(groupIndex, { unionLogic: OR })"
-              >或条件
-              </el-button
-              >
-            </div>
           </div>
         </div>
       </template>
     </el-form>
-
-    <div class="flow-condition-action">
-      <el-link
-        icon="el-icon-plus"
-        type="primary"
-        plain
-        @click="handleAddConditionGroup({ unionLogic: AND })"
-      >且条件组
-      </el-link
-      >
-
-      <el-link
-        style="margin-left: 20px"
-        icon="el-icon-plus"
-        type="primary"
-        plain
-        @click="handleAddConditionGroup({ unionLogic: OR })"
-      >或条件组
-      </el-link
-      >
-    </div>
-
-<!--    <SubmitterPicker-->
-<!--      ref="picker"-->
-<!--      :show.sync="isSubmitterPickerVisible"-->
-<!--      multiple-->
-<!--      :title="computedPickerTitle"-->
-<!--      :default-selected="computedPickerValue"-->
-<!--      modal-->
-<!--      :append-to-body="true"-->
-<!--      :select-lock="type || 'user'"-->
-<!--      @onConfirm="handleConfirmPicker"-->
-<!--    ></SubmitterPicker>-->
-
-<!--    <TabTreePicker-->
-<!--      :is-show-project="type === 'project'"-->
-<!--      :is-show-company="type === 'company'"-->
-<!--      :show.sync="isTabTreePickerVisible"-->
-<!--      multiple-->
-<!--      :title="computedPickerTitle"-->
-<!--      :default-selected="computedPickerValue"-->
-<!--      modal-->
-<!--      :append-to-body="true"-->
-<!--      :exclude-types="[-->
-<!--        OrgNodeType.Department,-->
-<!--        OrgNodeType.ConstructUnit,-->
-<!--        OrgNodeType.ConstructUnitGroup-->
-<!--      ]"-->
-<!--      :select-lock="type || 'user'"-->
-<!--      @onConfirm="handleConfirmPicker"-->
-<!--    ></TabTreePicker>-->
-
-    <!--    <PositionPicker-->
-    <!--      title="选择岗位标签"-->
-    <!--      list-key-name="nodeName"-->
-    <!--      :show.sync="positionVisible"-->
-    <!--      :role-list="computedPositionPickerValue"-->
-    <!--      @addCallBack="handleCallBack"-->
-    <!--    ></PositionPicker>-->
 
     <template slot="footer">
       <el-button class="process" type="primary" plain @click="handleClickCancel"
@@ -344,12 +261,6 @@ const defaultConditionItem = {
 
 export default {
   name: 'ConditionSettings',
-
-  components: {
-    // TabTreePicker: () => VueMfe.Lazy('auth2.components.TabTreePicker'),
-    // PositionPicker: () => VueMfe.Lazy('auth2.components.PositionPicker'),
-    // SubmitterPicker: () => VueMfe.Lazy('auth2.components.SubmitterPicker')
-  },
 
   directives: { ref },
 

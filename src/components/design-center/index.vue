@@ -2,7 +2,7 @@
   <div ref="">
     <div class="flow-container">
       <FlowLayout
-        :fields="flowFields"
+        :fields="formFields"
         :root-node="startNode"
         :curr-node="currNode"
         @click-node="handleClickNode"
@@ -14,7 +14,7 @@
         :node="currNode"
         :project-only="!!projectSysNo"
         :join-plan="joinPlan"
-        :fields="flowFields"
+        :fields="formFields"
         :visible.sync="visible"
       />
 
@@ -46,23 +46,17 @@ import SidePanel from './components/panel/index'
 import FlowLayout from './components/flow/index'
 import ConditionSettings from './_condition-settings'
 import { BUSINESS_FLOW } from './constants/FLOW_TYPE'
-import {
-  SPONSOR_PICKER_TYPE,
-  SPONSOR_TYPE_NAME
-} from './constants/CONDITION_ADDITION'
-import {
-  CONDITION_FIELD_TYPES,
-  CONDITION_PEOPLE_TYPES
-} from './constants/ENUM_DEFINITIONS'
-import { fieldCanWrite, updateFieldsWithMerge } from './utils/fieldsHelpers'
-import DynamicForm from '@/views/formDesign/index.vue'
+import { SPONSOR_TYPE_NAME } from './constants/CONDITION_ADDITION'
+import { updateFieldsWithMerge } from './utils/fieldsHelpers'
+import { getDrawingList } from '@/utils/db'
+import { CONDITION_TYPES } from '@/components/design-center/constants/ENUM_DEFINITIONS'
 
 export default {
   name: 'DesignCenter',
   components: {
     SidePanel,
     FlowLayout,
-    ConditionSettings,
+    ConditionSettings
   },
   data() {
     return {
@@ -88,45 +82,26 @@ export default {
   },
   computed: {
     formFields() {
-      console.log('formFields')
-      if (!this.flowForm) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.flowForm = DynamicForm.methods.getData()
-        console.log(this.flowForm)
-      } else {
-        console.log(this.flowForm)
-      }
-      const formData = (this.flowForm || {}).formContentObject || {}
-      const fields = formData.fields || []
-
-      return fields && fields.length ? fields : []
+      const f = getDrawingList()
+      const ff = []
+      f.forEach(item => {
+        const gg = {
+          fieldKey: item.__vModel__,
+          fieldName: item.__config__.label,
+          type: item.__config__.tagIcon,
+          require: item.__config__.required,
+          editable: false,
+          canWrite: false,
+          canView: false,
+          useCondition: false,
+          textVisible: false
+        }
+        ff.push(gg)
+      })
+      return ff
     },
     flowFields() {
-      return this.formFields.map(
-        ({
-          name,
-          type,
-          key,
-          options: { required, editable, textVisible }
-        }) => {
-          let canWrite = false
-          const isUseCondition = !!this.usingConditionFields[key]
-          if (textVisible && this.joinPlan === 1) {
-            canWrite = fieldCanWrite(type)
-          }
-          return {
-            type,
-            fieldKey: key,
-            fieldName: name,
-            canView: textVisible,
-            canWrite: canWrite,
-            require: required || false,
-            editable: editable,
-            textVisible: textVisible || false,
-            useCondition: isUseCondition
-          }
-        }
-      )
+      return []
     },
     joinPlan() {
       /**
@@ -148,40 +123,22 @@ export default {
     },
     // 条件字段
     conditionFields() {
-      console.log('fuck---')
-      console.log(this.formFields)
-      return Object.keys(SPONSOR_TYPE_NAME)
-        .map((key) => ({
-          fieldKey: key,
-          fieldName: SPONSOR_TYPE_NAME[key],
-          fieldType: SPONSOR_PICKER_TYPE[key],
-          fieldOptions: []
-        }))
-        .concat(
-          this.formFields
-            .filter(({ type, options: { multiple, required } }) => {
-              const conditionType = CONDITION_FIELD_TYPES[type]
-              // 如果是业务流程，则条件字段都必须提前就是必填项
-              // if (this.isBusinessFlow) {
-              //   return required
-              // }
-
-              // fixed:(#1017652)表单设置选择人为多选，则不能设置为条件字段
-              if (CONDITION_PEOPLE_TYPES[type]) {
-                return required && !multiple
-              } else {
-                return required && !!conditionType
-              }
-            })
-            .map(
-              ({ type, key, name, options: { options: fieldOptions }}) => ({
-                fieldKey: key,
-                fieldName: name,
-                fieldType: type,
-                fieldOptions: fieldOptions || []
-              })
-            )
-        )
+      console.log('----')
+      const f = getDrawingList()
+      const ff = []
+      f.filter(x => {
+        return Object.values(CONDITION_TYPES).indexOf(x.__config__.tagIcon) > 0
+      }).forEach(item => {
+        const gg = {
+          fieldKey: item.__vModel__,
+          fieldName: item.__config__.label,
+          fieldType: item.__config__.tagIcon,
+          fieldOptions: [{ label: item.__config__.label, value: '1' }]
+        }
+        ff.push(gg)
+      })
+      console.log(ff)
+      return ff
     },
     flowCode() {
       return this.$route.query && this.$route.query.flowCode

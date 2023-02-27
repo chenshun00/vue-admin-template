@@ -570,7 +570,7 @@ export const PEOPLE_TYPES_TITLE = {
   [PEOPLE_PICKER_TYPES[PEOPLE_TYPES.PROJECT]]: '项目',
   [PEOPLE_PICKER_TYPES[PEOPLE_TYPES.DEPARTMENT]]: '部门',
   [PEOPLE_PICKER_TYPES[PEOPLE_TYPES.COMPANY]]: '公司',
-  [PEOPLE_PICKER_TYPES[PEOPLE_TYPES.JOB]]: '角色',
+  [PEOPLE_PICKER_TYPES[PEOPLE_TYPES.JOB]]: '角色'
 }
 
 /**
@@ -586,8 +586,7 @@ export const CONDITION_TYPES = {
   LIST: 'system_list', // 单选/多选下拉框
   NUMBER: 'number', // 数字
   MONEY: 'amount', // 金额
-  SERIAL: 'serial', // 流水号
-  ...PEOPLE_TYPES,
+  SERIAL: 'serial' // 流水号
 }
 
 /**
