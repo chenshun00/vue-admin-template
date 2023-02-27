@@ -55,13 +55,14 @@ import {
   CONDITION_PEOPLE_TYPES
 } from './constants/ENUM_DEFINITIONS'
 import { fieldCanWrite, updateFieldsWithMerge } from './utils/fieldsHelpers'
+import DynamicForm from '@/views/formDesign/index.vue'
 
 export default {
   name: 'DesignCenter',
   components: {
     SidePanel,
     FlowLayout,
-    ConditionSettings
+    ConditionSettings,
   },
   data() {
     return {
@@ -87,6 +88,14 @@ export default {
   },
   computed: {
     formFields() {
+      console.log('formFields')
+      if (!this.flowForm) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.flowForm = DynamicForm.methods.getData()
+        console.log(this.flowForm)
+      } else {
+        console.log(this.flowForm)
+      }
       const formData = (this.flowForm || {}).formContentObject || {}
       const fields = formData.fields || []
 
@@ -139,6 +148,8 @@ export default {
     },
     // 条件字段
     conditionFields() {
+      console.log('fuck---')
+      console.log(this.formFields)
       return Object.keys(SPONSOR_TYPE_NAME)
         .map((key) => ({
           fieldKey: key,
@@ -148,7 +159,7 @@ export default {
         }))
         .concat(
           this.formFields
-            .filter(({ type, options: { multiple, required }}) => {
+            .filter(({ type, options: { multiple, required } }) => {
               const conditionType = CONDITION_FIELD_TYPES[type]
               // 如果是业务流程，则条件字段都必须提前就是必填项
               // if (this.isBusinessFlow) {
