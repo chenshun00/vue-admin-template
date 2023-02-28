@@ -170,8 +170,7 @@
                     <!-- v-model="condition.value" -->
                     <el-input
                       v-else-if="
-                        Boolean(getPickerType(condition)) ||
-                          isPosition(condition)
+                        Boolean(getPickerType(condition))
                       "
                       :value="getFieldOptions(condition)"
                       multiple
@@ -356,7 +355,7 @@ export default {
       // fix: 单选 RADIO 类型无法显示 SELECT>OPTIONS 组件
       function isSelectable(type) {
         return (
-          type === CONDITION_TYPES.COMBO || type === CONDITION_TYPES.RADIO
+          type === CONDITION_TYPES.COMBO || type === CONDITION_TYPES.RADIO || type === CONDITION_TYPES.LIST
         )
       }
 
@@ -518,13 +517,6 @@ export default {
         : ''
     },
 
-    isPosition(condition) {
-      if (condition) {
-        return condition.fieldKey === START_USER_POST_LABEL
-      }
-      return false
-    },
-
     isMultipleType(condition) {
       return (
         condition &&
@@ -583,7 +575,7 @@ export default {
     },
 
     getFieldOptions(condition) {
-      if (this.getPickerType(condition) || this.isPosition(condition)) {
+      if (this.getPickerType(condition)) {
         return (condition.value || [])
           .map(
             ({ name, parentFullName }) =>

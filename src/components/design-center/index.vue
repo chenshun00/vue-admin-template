@@ -1,6 +1,5 @@
 <template>
   <div ref="">
-    {{ this.test }}
     <div class="flow-container">
       <FlowLayout
         :fields="formFields"
@@ -49,7 +48,6 @@ import ConditionSettings from './_condition-settings'
 import { BUSINESS_FLOW } from './constants/FLOW_TYPE'
 import { SPONSOR_TYPE_NAME } from './constants/CONDITION_ADDITION'
 import { updateFieldsWithMerge } from './utils/fieldsHelpers'
-import { getDrawingList } from '@/utils/db'
 import { CONDITION_TYPES } from '@/components/design-center/constants/ENUM_DEFINITIONS'
 
 export default {
@@ -60,11 +58,37 @@ export default {
     ConditionSettings
   },
   props: {
-    test: {
+    formFieldList: {
       type: Array
     }
   },
   data() {
+    const ff = []
+    this.formFieldList.forEach(item => {
+      ff.push({
+        fieldKey: item.__vModel__,
+        fieldName: item.__config__.label,
+        type: item.__config__.tagIcon,
+        require: item.__config__.required,
+        editable: false,
+        canWrite: false,
+        canView: false,
+        useCondition: false,
+        textVisible: false
+      })
+    })
+
+    const condi = []
+    this.formFieldList.filter(x => {
+      return Object.values(CONDITION_TYPES).indexOf(x.__config__.tagIcon) > 0
+    }).forEach(item => {
+      condi.push({
+        fieldKey: item.__vModel__,
+        fieldName: item.__config__.label,
+        fieldType: item.__config__.tagIcon,
+        fieldOptions: item.__slot__ && item.__slot__.options ? item.__slot__.options : []
+      })
+    })
     return {
       currNode: null,
       conditionVisible: false,
@@ -83,29 +107,12 @@ export default {
 
       currentOrganization: {},
 
-      corpSysNo: ''
+      corpSysNo: '',
+      formFields: ff,
+      conditionFields: condi
     }
   },
   computed: {
-    formFields() {
-      const f = getDrawingList()
-      const ff = []
-      f.forEach(item => {
-        const gg = {
-          fieldKey: item.__vModel__,
-          fieldName: item.__config__.label,
-          type: item.__config__.tagIcon,
-          require: item.__config__.required,
-          editable: false,
-          canWrite: false,
-          canView: false,
-          useCondition: false,
-          textVisible: false
-        }
-        ff.push(gg)
-      })
-      return ff
-    },
     flowFields() {
       return []
     },
@@ -126,25 +133,6 @@ export default {
     // 是否是业务流程
     isBusinessFlow() {
       return this.flowSettings && this.flowSettings.flowType === BUSINESS_FLOW
-    },
-    // 条件字段
-    conditionFields() {
-      console.log('----')
-      const f = getDrawingList()
-      const ff = []
-      f.filter(x => {
-        return Object.values(CONDITION_TYPES).indexOf(x.__config__.tagIcon) > 0
-      }).forEach(item => {
-        const gg = {
-          fieldKey: item.__vModel__,
-          fieldName: item.__config__.label,
-          fieldType: item.__config__.tagIcon,
-          fieldOptions: item.__slot__&&item.__slot__.options? item.__slot__.options: []
-        }
-        ff.push(gg)
-      })
-      console.log(ff)
-      return ff
     },
     flowCode() {
       return this.$route.query && this.$route.query.flowCode
@@ -171,6 +159,41 @@ export default {
     }
   },
   watch: {
+    formFieldList: {
+      handler(val) {
+        console.log('val', val)
+        const ff = []
+        this.formFieldList.forEach(item => {
+          ff.push({
+            fieldKey: item.__vModel__,
+            fieldName: item.__config__.label,
+            type: item.__config__.tagIcon,
+            require: item.__config__.required,
+            editable: false,
+            canWrite: false,
+            canView: false,
+            useCondition: false,
+            textVisible: false
+          })
+        })
+
+        const condi = []
+        this.formFieldList.filter(x => {
+          return Object.values(CONDITION_TYPES).indexOf(x.__config__.tagIcon) > 0
+        }).forEach(item => {
+          condi.push({
+            fieldKey: item.__vModel__,
+            fieldName: item.__config__.label,
+            fieldType: item.__config__.tagIcon,
+            fieldOptions: item.__slot__ && item.__slot__.options ? item.__slot__.options : []
+          })
+        })
+
+        this.formFields = ff
+        this.conditionFields = condi
+      },
+      deep: true
+    },
     conditionVisible(val) {
       if (!val && this.currNode) this.currNode = null
     },

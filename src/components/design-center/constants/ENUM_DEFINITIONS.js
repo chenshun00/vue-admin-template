@@ -583,7 +583,7 @@ export const CONDITION_TYPES = {
   TEXTAREA: 'textarea', // 输入区域
   RADIO: 'radio', // 单选
   COMBO: 'combo', // 多选
-  LIST: 'system_list', // 单选/多选下拉框
+  LIST: 'select', // 单选/多选下拉框
   NUMBER: 'number', // 数字
   MONEY: 'amount', // 金额
   SERIAL: 'serial' // 流水号

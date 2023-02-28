@@ -25,7 +25,7 @@
           <design-center
             v-show="activeStep === 'processDesign'"
             ref="processDesign"
-            :test="test"
+            :form-field-list="formFields"
             tab-name="processDesign"
             @startNodeChange="onStartChange"
           />
@@ -77,7 +77,7 @@ export default {
       tabPosition: 'top',
       mockData: null, // 可选择诸如 $route.param，Ajax获取数据等方式自行注入
       activeStep: 'basicSetting',
-      test: []
+      formFields: []
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -123,7 +123,7 @@ export default {
       console.log('配置数据', param)
     },
     onChange(val) {
-      this.test = val;
+      this.formFields = val
     },
     /**
      * 同步基础设置发起人和流程节点发起人
