@@ -192,6 +192,7 @@ export default {
       handler(val) {
         this.saveDrawingListDebounce(val)
         if (val.length === 0) this.idGlobal = 100
+        this.$emit('onChange',val)
       },
       deep: true
     },

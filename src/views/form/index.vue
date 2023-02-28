@@ -17,6 +17,7 @@
             v-show="activeStep === 'formDesign'"
             ref="formDesign"
             tab-name="formDesign"
+            @onChange="onChange"
           />
         </el-tab-pane>
         <!-- 流程设计 -->
@@ -24,6 +25,7 @@
           <design-center
             v-show="activeStep === 'processDesign'"
             ref="processDesign"
+            :test="test"
             tab-name="processDesign"
             @startNodeChange="onStartChange"
           />
@@ -74,7 +76,8 @@ export default {
     return {
       tabPosition: 'top',
       mockData: null, // 可选择诸如 $route.param，Ajax获取数据等方式自行注入
-      activeStep: 'basicSetting'
+      activeStep: 'basicSetting',
+      test: []
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -118,6 +121,9 @@ export default {
         position: 'bottom-right'
       })
       console.log('配置数据', param)
+    },
+    onChange(val) {
+      this.test = val;
     },
     /**
      * 同步基础设置发起人和流程节点发起人
