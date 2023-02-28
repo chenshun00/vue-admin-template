@@ -1,5 +1,6 @@
 <template>
   <div ref="">
+    {{ this.test }}
     <div class="flow-container">
       <FlowLayout
         :fields="formFields"
@@ -57,6 +58,11 @@ export default {
     SidePanel,
     FlowLayout,
     ConditionSettings
+  },
+  props: {
+    test: {
+      type: Array
+    }
   },
   data() {
     return {
