@@ -1,5 +1,6 @@
 <template>
   <div ref="">
+    {{ this.test }}
     <div class="flow-container">
       <FlowLayout
         :fields="formFields"
@@ -57,6 +58,11 @@ export default {
     SidePanel,
     FlowLayout,
     ConditionSettings
+  },
+  props: {
+    test: {
+      type: Array
+    }
   },
   data() {
     return {
@@ -133,7 +139,7 @@ export default {
           fieldKey: item.__vModel__,
           fieldName: item.__config__.label,
           fieldType: item.__config__.tagIcon,
-          fieldOptions: [{ label: item.__config__.label, value: '1' }]
+          fieldOptions: item.__slot__&&item.__slot__.options? item.__slot__.options: []
         }
         ff.push(gg)
       })
