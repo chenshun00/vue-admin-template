@@ -46,7 +46,7 @@
 <script>
 // @ is an alias to /src
 import BasicSetting from '@/components/BasicSetting'
-import DynamicForm from '@/views/formDesign/index.vue'
+import DynamicForm from '@/components/formDesign/index.vue'
 import DesignCenter from '@/components/design-center'
 import AdvancedSetting from '@/components/AdvancedSetting'
 
