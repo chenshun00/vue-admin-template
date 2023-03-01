@@ -103,7 +103,6 @@
 <script>
 import draggable from 'vuedraggable'
 import { debounce } from 'throttle-debounce'
-import { saveAs } from 'file-saver'
 import FormDrawer from './FormDrawer.vue'
 import RightPanel from './RightPanel.vue'
 import { formConf, inputComponents, layoutComponents, selectComponents } from '@/components/generator/config'
@@ -133,6 +132,7 @@ export default {
     CodeTypeDialog,
     DraggableItem
   },
+  props: ['conf'],
   data() {
     return {
       idGlobal,
@@ -170,6 +170,12 @@ export default {
     }
   },
   computed: {},
+  created() {
+    if (typeof this.conf === 'object' && this.conf !== null) {
+      Object.assign(this.drawingList, this.conf.fields)
+      Object.assign(this.formConf, this.conf.conf)
+    }
+  },
   watch: {
     // eslint-disable-next-line func-names
     'activeData.__config__.label': function(val, oldVal) {
@@ -204,18 +210,18 @@ export default {
     }
   },
   mounted() {
-    if (Array.isArray(drawingListInDB) && drawingListInDB.length > 0) {
-      this.drawingList = drawingListInDB
-    } else {
-      this.drawingList = drawingDefalut
-    }
-    this.activeFormItem(this.drawingList[0])
-    if (formConfInDB) {
-      this.formConf = formConfInDB
-    }
-    loadBeautifier(btf => {
-      beautifier = btf
-    })
+    // if (Array.isArray(drawingListInDB) && drawingListInDB.length > 0) {
+    //   this.drawingList = drawingListInDB
+    // } else {
+    //   this.drawingList = drawingDefalut
+    // }
+    // this.activeFormItem(this.drawingList[0])
+    // if (formConfInDB) {
+    //   this.formConf = formConfInDB
+    // }
+    // loadBeautifier(btf => {
+    //   beautifier = btf
+    // })
   },
   methods: {
     setObjectValueReduce(obj, strKeys, data) {
