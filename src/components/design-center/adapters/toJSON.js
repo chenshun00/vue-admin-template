@@ -190,10 +190,11 @@ const createSequenceGenerator = (graph, sequenceList) => {
  * @returns {TaskNode}
  */
 const toTask = (node) => {
+  console.log('节点转化')
   let taskNode = {
     taskNodeId: node.nodeId,
     taskNodeName: (node.model || {}).title,
-    taskNodeDescription: null,
+    taskNodeDescription: node.model.content,
     taskType: getServerType(node.type)
   }
 
@@ -229,15 +230,13 @@ const toTask = (node) => {
 
     if (formFieldKey) {
       taskNode.participant = { formFieldKey, ...participantProps }
-    } else if (list && list.length) {
+    } else if (list) {
       taskNode.participant = {
         // eslint-disable-next-line no-unused-vars
-        list: list.map(({ model: { unitType, ...data }, hasUser }) => ({
-          ...data,
-          hasUser
-        })),
+        list: list,
         ...participantProps
       }
+      console.log('taskNode:',taskNode)
     } else {
       taskNode.participant = {
         ...participantProps

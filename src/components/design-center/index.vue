@@ -60,6 +60,9 @@ export default {
   props: {
     formFieldList: {
       type: Array
+    },
+    processDesign: {
+      type: Object
     }
   },
   data() {
@@ -101,7 +104,10 @@ export default {
       usingConditionFields: {},
 
       flowForm: {},
-      flowModel: {},
+      flowModel: {
+        taskList: this.processDesign.fields.taskList?this.processDesign.fields.taskList:[],
+        sequenceList: this.processDesign.fields.sequenceList?this.processDesign.fields.sequenceList:[],
+      },
       flowSponsors: {},
       flowSettings: {},
 
@@ -161,7 +167,6 @@ export default {
   watch: {
     formFieldList: {
       handler(val) {
-        console.log('val', val)
         const ff = []
         this.formFieldList.forEach(item => {
           ff.push({
@@ -306,6 +311,7 @@ export default {
       this.$root && this.$root.$on('wf-release', this.handleRelease)
     },
     initViewModel() {
+
       this.startNode = toModel(
         this.flowModel || {},
         {

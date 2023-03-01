@@ -195,10 +195,10 @@ export const toNode = (
   needConvert = true
 ) => {
   const nodeType = getNodeType(taskType)
-  let content = ''
+  let content = props.taskNodeDescription?props.taskNodeDescription:''
 
   if (needConvert) {
-    if (participant) {
+    if (!content && participant) {
       content = convertParticipant(participant, fields)
     }
 
