@@ -257,22 +257,22 @@ export const findTaskById = (tasks = []) => {
 function filterConditions(conditionList, flowFields, isBusinessFlow) {
   return conditionList.filter(Boolean).map((condition) => {
     // 如果是默认的发起人类型
-    const isSponsor = SPONSOR_PICKER_TYPE[condition.fieldKey]
-
-    if (!isSponsor) {
-      const field = flowFields.find(
-        (item) => item.fieldKey === condition.fieldKey
-      )
-
-      if (!field) {
-        condition.fieldKey = ''
-      } else {
-        // fix: 如果是业务流程，且字段的 required 属性是 false，也需要清空该条件
-        if (isBusinessFlow && field.require !== undefined && !field.require) {
-          condition.fieldKey = ''
-        }
-      }
-    }
+    // const isSponsor = SPONSOR_PICKER_TYPE[condition.fieldKey]
+    //
+    // if (!isSponsor) {
+    //   const field = flowFields.find(
+    //     (item) => item.fieldKey === condition.fieldKey
+    //   )
+    //
+    //   if (!field) {
+    //     condition.fieldKey = ''
+    //   } else {
+    //     // fix: 如果是业务流程，且字段的 required 属性是 false，也需要清空该条件
+    //     if (isBusinessFlow && field.require !== undefined && !field.require) {
+    //       condition.fieldKey = ''
+    //     }
+    //   }
+    // }
 
     return condition
   })

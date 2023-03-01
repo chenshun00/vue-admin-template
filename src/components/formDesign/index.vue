@@ -113,14 +113,11 @@ import { makeUpCss } from '@/components/generator/css'
 import drawingDefalut from '@/components/generator/drawingDefalut'
 import CodeTypeDialog from './CodeTypeDialog.vue'
 import DraggableItem from './DraggableItem.vue'
-import { getDrawingList, getFormConf, getIdGlobal, saveDrawingList, saveIdGlobal } from '@/utils/db'
-import loadBeautifier from '@/utils/loadBeautifier'
+import { getIdGlobal, saveDrawingList, saveIdGlobal } from '@/utils/db'
 
 let beautifier
 let oldActiveId
 let tempActiveData
-const drawingListInDB = getDrawingList()
-const formConfInDB = getFormConf()
 const idGlobal = getIdGlobal()
 
 export default {

@@ -105,8 +105,8 @@ export default {
 
       flowForm: {},
       flowModel: {
-        taskList: this.processDesign.fields.taskList?this.processDesign.fields.taskList:[],
-        sequenceList: this.processDesign.fields.sequenceList?this.processDesign.fields.sequenceList:[],
+        taskList: this.processDesign ? (this.processDesign.fields.taskList ? this.processDesign.fields.taskList : []) : [],
+        sequenceList: this.processDesign ? (this.processDesign.fields.sequenceList ? this.processDesign.fields.sequenceList : []) : []
       },
       flowSponsors: {},
       flowSettings: {},
@@ -311,7 +311,6 @@ export default {
       this.$root && this.$root.$on('wf-release', this.handleRelease)
     },
     initViewModel() {
-
       this.startNode = toModel(
         this.flowModel || {},
         {

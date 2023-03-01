@@ -42,6 +42,9 @@
               :key="condition.key"
               class="flow-condition-item"
             >
+              {{condition}}
+              111
+              {{isMultipleType(condition)}}
               <div
                 v-if="
                   index > 0 &&
@@ -168,18 +171,18 @@
 
                     <!-- 被动输入框值 -->
                     <!-- v-model="condition.value" -->
-                    <el-input
-                      v-else-if="
-                        Boolean(getPickerType(condition))
-                      "
-                      :value="getFieldOptions(condition)"
-                      multiple
-                      readonly
-                      placeholder="值"
-                      aria-placeholder="值"
-                      style="width: 100%"
-                      @click.native="() => handleClickPickerInput(condition)"
-                    ></el-input>
+<!--                    <el-input-->
+<!--                      v-else-if="-->
+<!--                        Boolean(getPickerType(condition))-->
+<!--                      "-->
+<!--                      :value="getFieldOptions(condition)"-->
+<!--                      multiple-->
+<!--                      readonly-->
+<!--                      placeholder="值"-->
+<!--                      aria-placeholder="值"-->
+<!--                      style="width: 100%"-->
+<!--                      @click.native="() => handleClickPickerInput(condition)"-->
+<!--                    ></el-input>-->
 
                     <!-- 主动输入框值 -->
                     <el-input
