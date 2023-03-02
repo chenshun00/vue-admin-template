@@ -17,11 +17,6 @@ import '@/permission' // permission control
 import axios from 'axios'
 import Tinymce from '@/components/tinymce/index.vue'
 
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
-
 Vue.component('tinymce', Tinymce)
 
 Vue.config.productionTip = false
