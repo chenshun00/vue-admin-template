@@ -37,6 +37,12 @@
         <img :src="activeIconSrc" style="width: 28px;height: 28px;vertical-align: middle;" alt="-">
         <el-button plain size="mini" @click="dialogVisible = true" style="margin-left: 10px;">选择图标</el-button>
       </el-form-item>
+      <el-form-item label="是否需要审批" prop="needApproval">
+        <el-radio-group v-model="formData.needApproval">
+          <el-radio :label="1">不需要审批</el-radio>
+          <el-radio :label="2">需要审批</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="审批说明" prop="flowRemark">
         <el-input
           v-model="formData.flowRemark"
@@ -93,7 +99,8 @@ export default {
         flowImg: '',
         flowGroup: undefined,
         flowRemark: undefined,
-        initiator: null
+        initiator: null,
+        needApproval: 1
       },
       rules: {
         flowName: [{
@@ -169,6 +176,14 @@ export default {
         this.formData.initiator = val
       },
       immediate: true
+    },
+    'formData.needApproval': {
+      handler(val) {
+        console.log('formData.needApproval:' ,val)
+        this.formData.needApproval = val;
+        this.$emit('onNeedApproval',val)
+      },
+      deep: true
     }
   }
 }

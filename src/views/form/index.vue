@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div style="position: relative;">
-      <el-tabs v-model="activeStep" :tab-position="tabPosition">
+    <div style="position: relative;align-items: center;">
+      <el-tabs v-model="activeStep" :tab-position="tabPosition" stretch>
         <!--基础信息-->
         <el-tab-pane name="basicSetting" label="基础信息">
           <BasicSetting
@@ -10,6 +10,7 @@
             tab-name="basicSetting"
             :conf="mockData.basicSetting"
             @initiatorChange="onInitiatorChange"
+            @onNeedApproval="onNeedApproval"
           />
         </el-tab-pane>
         <!-- 表单设计 -->
@@ -22,24 +23,24 @@
             @onChange="onChange"
           />
         </el-tab-pane>
-        <!-- 流程设计 -->
-        <el-tab-pane name="processDesign" label="流程设计">
-          <design-center
-            v-show="activeStep === 'processDesign'"
-            ref="processDesign"
-            :form-field-list="formFields"
-            :process-design="mockData.processDesign"
-            tab-name="processDesign"
-            @startNodeChange="onStartChange"
-          />
-        </el-tab-pane>
-        <!--高级设置-->
-        <el-tab-pane name="advancedSetting" label="高级设置">
-          <AdvancedSetting
-            v-show="activeStep === 'advancedSetting'"
-            ref="advancedSetting"
-            :conf="mockData.advancedSetting"
-          />
+          <!-- 流程设计 -->
+          <el-tab-pane name="processDesign" label="流程设计">
+            <design-center
+              v-show="activeStep === 'processDesign'"
+              ref="processDesign"
+              :form-field-list="formFields"
+              :process-design="mockData.processDesign"
+              tab-name="processDesign"
+              @startNodeChange="onStartChange"
+            />
+          </el-tab-pane>
+          <!--高级设置-->
+          <el-tab-pane name="advancedSetting" label="高级设置">
+            <AdvancedSetting
+              v-show="activeStep === 'advancedSetting'"
+              ref="advancedSetting"
+              :conf="mockData.advancedSetting"
+            />
         </el-tab-pane>
       </el-tabs>
       <el-button size="small" style="position: absolute;right:10px;top:5px;" class="publish-btn" @click="publish">
@@ -79,6 +80,7 @@ export default {
   data() {
     return {
       tabPosition: 'top',
+      processDisable: 2,
       mockData: null,
       activeStep: 'basicSetting',
       formFields: []
@@ -130,6 +132,9 @@ export default {
     onChange(val) {
       this.formFields = val
     },
+    onNeedApproval(val) {
+      this.processDisable = val
+    },
     /**
      * 同步基础设置发起人和流程节点发起人
      */
@@ -137,7 +142,7 @@ export default {
       const processCmp = this.$refs.processDesign
       const startNode = processCmp.data
       startNode.properties.initiator = val['dep&user']
-      startNode.content = labels || '所有人'
+      startNode.content = labels || '发起人'
       processCmp.forceUpdate()
     },
     /**
@@ -150,117 +155,15 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-$header-height = 54px;
-.page {
-  width: 100%;
-  height: 100%;
-  padding-top: $header-height;
-  box-sizing: border-box;
+<style lang="scss" scoped>
+/* $header-height = 54px; */
 
-  .page__header {
-    width: 100%;
-    height: $header-height;
-    flex-center()
-    justify-content: space-between;
-    box-sizing: border-box;
-    color: white;
-    background: #3296fa;
-    font-size: 14px;
-    position: fixed;
-    top: 0;
-
-    .page-actions {
-      height: 100%;
-      text-align: center;
-      line-height: $header-height;
-
-      > div {
-        height: 100%;
-        padding-left: 20px;
-        padding-right: 20px;
-        display: inline-block;
-      }
-
-      i {
-        font-size: 22px;
-        vertical-align: middle;
-      }
-    }
-
-    .step-tab {
-      display: flex;
-      justify-content: center;
-      height: 100%;
-      position: relative;
-
-      > .step {
-        width: 140px;
-        line-height: $header-height;
-        padding-left: 30px;
-        padding-right: 30px;
-        cursor: pointer;
-        position: relative;
-
-        &.ghost-step {
-          position: absolute;
-          height: $header-height;
-          left: 0;
-          z-index: -1;
-          background: #4483f2;
-          transition: transform .5s;
-
-          &::after {
-            content: '';
-            border-width: 6px 6px 6px;
-            border-style: solid;
-            border-color: transparent transparent white;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            margin-left: -6px;
-          }
-        }
-
-        &.active > .step-index {
-          background: white;
-          color: #4483f2;
-        }
-
-        > .step-index {
-          display: inline-block;
-          width: 18px;
-          height: 18px;
-          border: 1px solid #fff;
-          border-radius: 8px;
-          line-height: 18px;
-          text-align: center;
-          box-sizing: border-box;
-        }
-      }
-    }
+::v-deep .el-tabs__nav-scroll{
+    width:30%;
+    margin:0 auto
   }
 
-  .page__content {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    background #f5f5f7
+::v-deep .el-tabs__header {
+    margin: 0 0 0 0
   }
-}
-
-.publish-btn {
-  margin-right: 20px;
-  color: #3296fa;
-  padding: 7px 20px;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.github {
-  position fixed
-  bottom 10px
-  left 20px
-}
 </style>

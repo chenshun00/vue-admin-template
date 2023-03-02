@@ -7,7 +7,7 @@ import FLOW_NODE_TYPE from './FLOW_NODE_TYPE_ENUM'
 export default {
   [FLOW_NODE_TYPE.SPONSOR_NODE]: {
     title: '发起人',
-    content: '所有人',
+    content: '发起人',
     // titleIcon: 'el-icon-user-solid',
     contentIcon: 'el-icon-arrow-right',
     customTitleStyle: {
